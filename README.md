@@ -1,0 +1,2 @@
+# MayoristaLisemmaApp
+Frontend de MayoristaLisemma
