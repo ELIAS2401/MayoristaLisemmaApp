@@ -1,0 +1,95 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    <div class="text-center mb-3">
+                        <img src="assets/img/lisemma-logo.png" alt="Lissema" class="logo">
+                    </div>
+
+                    <h3 class="text-center mb-4 titulo">Iniciar Sesion</h3>
+
+                    <form (ngSubmit)="loguearse()">
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="email" type="email" pInputText [(ngModel)]="email" name="email" required
+                                class="form-control" placeholder="nombre@ejemplo.com" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña</label>
+                            <input id="contraseña" type="password" pInputText [(ngModel)]="password" name="contraseña"
+                                required class="form-control" placeholder="Ingresa tu contraseña" />
+                        </div>
+
+                        <button class="btn btn-primary w-100 boton" type="submit" [disabled]="loading">
+                            {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
+                        </button>
+
+                        <br><br>
+                        
+
+                        <button class="btn btn-primary w-100 botonSecundario" type="button" (click)="irARegistro()">
+                            Ir a Registro
+                        </button>
+                    </form>
+                    <div *ngIf="mensajeError" class="login-error mt-3">
+                        {{ mensajeError }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .titulo {
+        color: #202020;
+        /* rojo marca */
+        font-weight: 700;
+    }
+
+    .boton {
+        background-color: #38b6ff;
+        border-color: #38b6ff;
+        font-weight: 600;
+    }
+
+    .boton:hover {
+        background-color: #1aa8ff;
+        border-color: #1aa8ff;
+    }
+
+    .botonSecundario {
+        background-color: #f90000;
+        border-color: #f90000;
+        font-weight: 600;
+    }
+
+    .botonSecundario:hover {
+        background-color: #e60000;
+        border-color: #e60000;
+    }
+
+    .form-control:focus {
+        border-color: #38b6ff !important;
+        box-shadow: 0 0 0 0.2rem rgba(56, 182, 255, 0.25) !important;
+    }
+
+    .logo {
+        width: 160px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 0.5rem 0;
+    }
+</style>
