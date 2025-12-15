@@ -1,0 +1,53 @@
+<!-- Fondo oscuro -->
+<div class="overlay" (click)="cerrarModal()"></div>
+
+<!-- Tarjeta del modal -->
+<div class="modal-card">
+
+  <h3 class="text-center mb-3">Agregar Cliente</h3>
+
+  <form (ngSubmit)="guardar()">
+
+    <div class="mb-2">
+      <label>Nombre del negocio</label>
+      <input type="text" class="form-control" [(ngModel)]="nombreNegocio" name="nombreNegocio" required>
+    </div>
+
+    <div class="mb-2">
+      <label>Nombre del dueño</label>
+      <input type="text" class="form-control" [(ngModel)]="nombreDueno" name="nombreDueno">
+    </div>
+
+    <div class="mb-2">
+      <label>Teléfono</label>
+      <input type="text" class="form-control" [(ngModel)]="telefono" name="telefono">
+    </div>
+
+    <div class="mb-2">
+      <label>Dirección</label>
+      <input type="text" class="form-control" [(ngModel)]="direccion" name="direccion">
+    </div>
+
+    <div class="mb-2">
+      <label>Zona</label>
+      <input type="text" class="form-control" [(ngModel)]="zona" name="zona">
+    </div>
+
+    <div class="mb-2">
+      <label>Email</label>
+      <input type="email" class="form-control" [(ngModel)]="email" name="email">
+    </div>
+
+    <div class="mb-2">
+      <label>CUIT</label>
+      <input type="text" class="form-control" [(ngModel)]="cuit" name="cuit" required>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <button type="button" class="btn btn-secondary me-2" (click)="cerrarModal()">Cancelar</button>
+      <button type="submit" class="btn btn-success">Guardar</button>
+    </div>
+
+  </form>
+
+</div>

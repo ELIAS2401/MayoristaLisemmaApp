@@ -1,0 +1,30 @@
+<div class="overlay" (click)="cerrarModal()"></div>
+
+<div class="modal-card">
+
+  <h3 class="text-center mb-3">Editar producto</h3>
+
+  <form (ngSubmit)="guardar()">
+
+    <label class="form-label">Nombre</label>
+    <input type="text" class="form-control mb-2" [(ngModel)]="nombre" name="nombre" required>
+
+    <label class="form-label">CategoríaId</label>
+    <input type="number" class="form-control mb-2" [(ngModel)]="categoriaId" name="categoria">
+
+    <label class="form-label">Costo unitario</label>
+    <input type="number" class="form-control mb-2" [(ngModel)]="costoUnitario" name="costo" required>
+
+    <label class="form-label">Precio unitario</label>
+    <input type="number" class="form-control mb-2" [(ngModel)]="precioUnitario" name="precio" required>
+
+    <label class="form-label">Stock</label>
+    <input type="number" class="form-control mb-3" [(ngModel)]="stock" name="stock">
+
+    <div class="d-flex justify-content-between mt-3">
+      <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" (click)="guardar()">Guardar cambios</button>
+    </div>
+
+  </form>
+</div>

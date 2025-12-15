@@ -1,0 +1,32 @@
+.titulo {
+    color: #202020;
+    /* rojo marca */
+    font-weight: 700;
+}
+
+.boton {
+    background-color: #38b6ff;
+    border-color: #38b6ff;
+    font-weight: 600;
+}
+
+.boton:hover {
+    background-color: #1aa8ff;
+    border-color: #1aa8ff;
+}
+
+.botonSecundario {
+    background-color: #f90000;
+    border-color: #f90000;
+    font-weight: 600;
+}
+
+.botonSecundario:hover {
+    background-color: #e60000;
+    border-color: #e60000;
+}
+
+.form-control:focus {
+    border-color: #38b6ff !important;
+    box-shadow: 0 0 0 0.2rem rgba(56, 182, 255, 0.25) !important;
+}

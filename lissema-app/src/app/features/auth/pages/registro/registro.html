@@ -11,41 +11,72 @@
 
                     <h3 class="text-center mb-4 titulo">Crear cuenta</h3>
 
-                    <form (ngSubmit)="registrarse()">
+                    <form ngModelOptions="{ updateOn: 'input' }">
 
                         <div class="mb-3">
                             <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre" placeholder="Tu nombre" required>
+                            <input type="text" class="form-control" [(ngModel)]="nombre" name="nombre"
+                                placeholder="Tu nombre" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Apellido</label>
-                            <input type="text" class="form-control" [(ngModel)]="apellido" name="apellido" placeholder="Tu apellido" required>
+                            <input type="text" class="form-control" [(ngModel)]="apellido" name="apellido"
+                                placeholder="Tu apellido" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" [(ngModel)]="email" name="email" placeholder="Tu email" required>
+                            <input type="email" class="form-control" [(ngModel)]="email" name="email"
+                                placeholder="Tu email" required>
+                        </div>
+                        <div *ngIf="email && !emailValido" class="text-danger small">
+                            📛 Email inválido
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">DNI</label>
-                            <input type="number" class="form-control" [(ngModel)]="dni" name="dni" placeholder="Tu dni" required>
+                            <input type="number" class="form-control" [(ngModel)]="dni" name="dni" placeholder="Tu dni"
+                                required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" [(ngModel)]="telefono" name="telefono"
+                                placeholder="Número de teléfono" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            <input type="text" class="form-control" [(ngModel)]="direccion" name="direccion"
+                                placeholder="Domicilio" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Zona</label>
+                            <input type="text" class="form-control" [(ngModel)]="zona" name="zona"
+                                placeholder="Ej: Oeste / Sur / Centro" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" [(ngModel)]="password" name="password" placeholder="Crea una contraseña segura" required>
+                            <input type="password" class="form-control" [(ngModel)]="password" name="password"
+                                placeholder="Crea una contraseña segura" required>
                         </div>
-
+                        <div *ngIf="password && !passwordValida" class="text-danger small mb-3">
+                            📛 Debe tener 8 caracteres y 1 carácter especial
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Confirmar contraseña</label>
                             <input type="password" class="form-control" [(ngModel)]="passwordConfirmar"
                                 name="passwordConfirmar" required>
                         </div>
+                        <div *ngIf="passwordConfirmar && !passwordsCoinciden" class="text-danger small mb-3">
+                            📛 Las contraseñas no coinciden
+                        </div>
 
-                        <button class="btn btn-primary w-100 boton" type="submit" [disabled]="loading">
-                            {{ loading ? 'Creando cuenta...' : 'Registrarme' }}
+                        <button class="btn btn-primary w-100 boton" type="button" (click)="registrarse()">
+                            Registrarme
                         </button>
 
                         <br><br>
@@ -65,44 +96,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .titulo {
-        color: #202020;
-        /* rojo marca */
-        font-weight: 700;
-    }
-
-    .boton {
-        background-color: #38b6ff;
-        border-color: #38b6ff;
-        font-weight: 600;
-    }
-
-    .boton:hover {
-        background-color: #1aa8ff;
-        border-color: #1aa8ff;
-    }
-
-    .botonSecundario {
-        background-color: #f90000;
-        border-color: #f90000;
-        font-weight: 600;
-    }
-
-    .botonSecundario:hover {
-        background-color: #e60000;
-        border-color: #e60000;
-    }
-
-    .form-control:focus {
-        border-color: #38b6ff !important;
-        box-shadow: 0 0 0 0.2rem rgba(56, 182, 255, 0.25) !important;
-    }
-
-    .logo {
-        width: 160px;
-        height: auto;
-        object-fit: contain;
-    }
-</style>

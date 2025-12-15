@@ -18,6 +18,14 @@ export const routes: Routes = [
   },
   {
     path: 'productos', loadComponent: () =>
-      import('./features/productos/pages/productos/productos').then(c => c.Productos)
-  }
+      import('./features/productos/pages/listar-productos/productos').then(c => c.Productos)
+  },
+  {
+    path: 'clientes', loadComponent: () =>
+      import('./features/clientes/pages/listar-clientes/listar-clientes').then(c => c.ListarClientes)
+  },
+  {
+    path: 'ventas', loadComponent: () =>
+      import('./features/productos/pages/listar-productos/productos').then(c => c.Productos)
+  },
 ];

@@ -10,7 +10,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class AuthService {
 
-  private readonly baseApiUrl = `${environment.apiUrl}/auth`; // 👉 tu backend Node/Prisma
+  private readonly baseApiUrl = `${environment.apiUrl}/usuarios`; // 👉 tu backend Node/Prisma
 
   private http = inject(HttpClient);
   // Estado de sesión
@@ -23,7 +23,7 @@ export class AuthService {
   //  REGISTRO
   // -------------------
   register(usuario: Usuario): Observable<Usuario> {
-    return this.http.post<Usuario>(`${this.baseApiUrl}/register`, usuario);
+    return this.http.post<Usuario>(`${this.baseApiUrl}/registro`, usuario);
   }
 
   // LOGIN

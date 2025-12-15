@@ -1,5 +1,5 @@
 import { For } from './../../../../../../node_modules/@babel/types/lib/index-legacy.d';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,13 +17,22 @@ export class Login {
   password: string = ''
   mensajeError: string = '';
   loading: boolean = false;
+  mensajeExito: string = '';
 
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private authService = inject(AuthService);
 
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['registrado'] === 'ok') {
+        this.mensajeExito = 'Registro exitoso. Ya podés iniciar sesión.';
+      }
+    });
+  }
+
   irARegistro() {
-    // Lógica para navegar a la página de registro
-    this.router.navigate(['/auth/registro']);
+    this.router.navigate(['/registro']);
   }
 
   loguearse() {
