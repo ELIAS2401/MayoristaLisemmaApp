@@ -1,0 +1,86 @@
+<div class="overlay" (click)="cerrar.emit()"></div>
+
+<div class="modal-card">
+  <h4 class="mb-3 text-center">Registrar Venta</h4>
+
+  <form [formGroup]="form">
+
+    <!-- Cliente -->
+    <label class="form-label">Cliente</label>
+    <select class="form-select mb-3" formControlName="clienteId">
+      <option [ngValue]="null" disabled selected> Seleccione un cliente</option>
+      <option aria-placeholder="seleccione" *ngFor="let c of (clientes$ | async)" [ngValue]="c.id">
+        {{ c.nombreDueno }}
+      </option>
+    </select>
+
+    <!-- Producto -->
+    <div class="row">
+      <div class="col">
+        <select class="form-select" formControlName="productoId">
+          <option [ngValue]="null">Producto</option>
+          <option
+            *ngFor="let p of (productos$ | async)"
+            [ngValue]="p.id"
+            [disabled]="p.stock === 0"
+          >
+            {{ p.nombre }} - ${{ p.precioUnitario }} (Stock: {{ p.stock }})
+          </option>
+        </select>
+      </div>
+
+      <div class="col-3">
+        <input type="number" class="form-control" formControlName="cantidad">
+      </div>
+
+      <div class="col-3">
+        <button type="button" class="btn btn-primary w-100" (click)="agregarProducto()">
+          Agregar
+        </button>
+      </div>
+    </div>
+
+    <!-- Detalle -->
+    <table class="table table-sm mt-3" *ngIf="detalles.length">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cant.</th>
+          <th>Precio</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of detalles.controls; let i = index">
+          <td>{{ d.value.nombre }}</td>
+          <td>{{ d.value.cantidad }}</td>
+          <td>${{ d.value.precioUnitario }}</td>
+          <td>${{ d.value.cantidad * d.value.precioUnitario }}</td>
+          <td class="text-center">
+            <button class="btn btn-sm btn-danger" (click)="eliminarDetalle(i)">
+              ×
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h5 class="text-end">Total: ${{ total }}</h5>
+
+    <div class="d-flex justify-content-between mt-3">
+      <button class="btn btn-secondary" type="button" (click)="cerrar.emit()">
+        Cancelar
+      </button>
+      <button
+        class="btn btn-success"
+        type="button"
+        [disabled]="!puedeGuardar"
+        (click)="guardarVenta()"
+      >
+        Guardar
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -1,3 +1,4 @@
+import { Venta } from './interfaces/venta.interface';
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -26,6 +27,10 @@ export const routes: Routes = [
   },
   {
     path: 'ventas', loadComponent: () =>
-      import('./features/productos/pages/listar-productos/productos').then(c => c.Productos)
+      import('./features/ventas/pages/listar-ventas/listar-ventas').then(c => c.ListarVentas)
+  },
+  {
+    path: 'reportes', loadComponent: () =>
+      import('./features/reportes/pages/listar-reportes/listar-reportes').then(c => c.ListarReportes)
   },
 ];

@@ -1,0 +1,108 @@
+<app-header></app-header>
+<div class="container mt-4">
+
+    <h2 class="text-center mb-4">Reportes del Negocio</h2>
+    <div class="text-end mb-3">
+        <button class="btn btn-danger" (click)="descargarPDF()">
+            <i class="bi bi-file-earmark-pdf"></i>
+            Descargar PDF
+        </button>
+    </div>
+    <!-- Filtros -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <div class="row g-2">
+            <div class="col">
+                <label class="form-label">Desde</label>
+                <input type="date" class="form-control" [(ngModel)]="fechaDesde" (change)="aplicarFiltros()">
+            </div>
+
+            <div class="col">
+                <label class="form-label">Hasta</label>
+                <input type="date" class="form-control" [(ngModel)]="fechaHasta" (change)="aplicarFiltros()">
+            </div>
+
+            <div class="col">
+                <label class="form-label">Zona</label>
+                <select class="form-select" [(ngModel)]="zonaSeleccionada" (change)="aplicarFiltros()">
+                    <option value="">Todas</option>
+                    <option *ngFor="let z of zonas" [value]="z">
+                        {{ z }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Cliente</label>
+                <input type="text" class="form-control" placeholder="Buscar cliente..." [(ngModel)]="clienteBusqueda"
+                    (input)="aplicarFiltros()">
+            </div>
+        </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h6>Total vendido</h6>
+                <h3>${{ totalVendido | number:'1.0-0' }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h6>Cantidad de ventas</h6>
+                <h3>{{ cantidadVentas }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm">
+                <h6>Ticket promedio</h6>
+                <h3>${{ ticketPromedio | number:'1.0-0' }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ventas por zona -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <h5 class="mb-3">Ventas por zona</h5>
+
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Zona</th>
+                    <th>Total vendido</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let z of ventasPorZona">
+                    <td>{{ z.zona }}</td>
+                    <td>${{ z.total | number:'1.0-0' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Top clientes -->
+    <div class="card p-3 shadow-sm">
+        <h5 class="mb-3">Top clientes</h5>
+
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Total comprado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let c of topClientes">
+                    <td>{{ c.cliente }}</td>
+                    <td>${{ c.total | number:'1.0-0' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<br><br>

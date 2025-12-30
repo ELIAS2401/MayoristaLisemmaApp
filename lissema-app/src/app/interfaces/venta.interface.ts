@@ -3,12 +3,13 @@ import { Usuario } from './usuario.interface';
 import { DetalleVenta } from './detalle-venta.interface';
 
 export interface Venta {
-  id?: number;
-  fecha?: Date;
-  clienteId?: number;
+  id: number;
+  fecha: string;              // ISO desde backend
+  estado: 'ACTIVA' | 'ANULADA';
+
   cliente?: Cliente;
-  usuarioId: number;
-  usuario?: Usuario;
+  usuario: Usuario;
+
   total: number;
-  detalles?: DetalleVenta[];
+  detalles: DetalleVenta[];
 }

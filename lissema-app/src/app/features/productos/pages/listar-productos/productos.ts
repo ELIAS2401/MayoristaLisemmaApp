@@ -88,34 +88,36 @@ export class Productos implements OnInit {
     this.productoSeleccionadoId = null;
   }
 
-  async descargarPDF() {
-    // Obtenemos los productos actuales del observable
-    const productos = await firstValueFrom(this.productos$);
+  descargarPDF() {
+    const productos = this.productosFiltradosList; // 👈 CLAVE
 
     const doc = new jsPDF();
 
-    // LOGO (opcional)
     const img = new Image();
     img.src = 'assets/img/lisemma-logo.png';
+    doc.addImage(img, 'PNG', 80, 5, 50, 20);
 
-    doc.addImage(img, 'PNG', 80, 5, 50, 20); // centrado approx
-
-    // Título
     doc.setFontSize(18);
     doc.text('Inventario de Productos', 14, 40);
 
-    // Fecha
     doc.setFontSize(12);
     doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 50);
 
-    // Totales
-    const diferencia = this.totalPrecio - this.totalCosto;
+    // Totales SOLO de lo visible
+    const totalCosto = productos.reduce(
+      (sum, p) => sum + p.costoUnitario * (p.stock ?? 0), 0
+    );
 
-    doc.text(`Costo Total: $${this.totalCosto.toLocaleString()}`, 14, 60);
-    doc.text(`Precio Total: $${this.totalPrecio.toLocaleString()}`, 14, 67);
+    const totalPrecio = productos.reduce(
+      (sum, p) => sum + p.precioUnitario * (p.stock ?? 0), 0
+    );
+
+    const diferencia = totalPrecio - totalCosto;
+
+    doc.text(`Costo Total: $${totalCosto.toLocaleString()}`, 14, 60);
+    doc.text(`Precio Total: $${totalPrecio.toLocaleString()}`, 14, 67);
     doc.text(`Diferencia: $${diferencia.toLocaleString()}`, 14, 74);
 
-    // Tabla
     autoTable(doc, {
       startY: 85,
       head: [['Nombre', 'Categoría', 'Stock', 'Costo', 'Precio', 'Costo Inventario', 'Precio Inventario']],
@@ -133,6 +135,7 @@ export class Productos implements OnInit {
 
     doc.save('inventario.pdf');
   }
+
 
   actualizarFiltro() {
     const texto = this.busqueda.trim().toLowerCase();

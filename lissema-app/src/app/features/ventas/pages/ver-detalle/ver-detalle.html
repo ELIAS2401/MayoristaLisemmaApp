@@ -1,0 +1,51 @@
+<div class="modal-backdrop-custom">
+
+  <div class="modal-custom">
+
+    <div class="modal-header">
+      <h5>Detalle de Venta #{{ venta?.id }}</h5>
+      <button class="btn-close" (click)="cerrar.emit()"></button>
+    </div>
+
+    <div class="modal-body" *ngIf="venta">
+
+      <p><b>Fecha:</b> {{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+      <p><b>Cliente:</b> {{ venta.cliente?.nombreDueno || 'Consumidor Final' }}</p>
+      <p><b>Usuario:</b> {{ venta.usuario.nombre }}</p>
+
+      <hr>
+
+      <table class="table table-bordered table-sm">
+        <thead class="table-light">
+          <tr>
+            <th>Producto</th>
+            <th>Cant.</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let d of venta.detalles">
+            <td>{{ d.producto.nombre }}</td>
+            <td>{{ d.cantidad }}</td>
+            <td>${{ d.precioUnitario }}</td>
+            <td>${{ d.cantidad * d.precioUnitario }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h5 class="text-end mt-3">
+        Total: ${{ venta.total }}
+      </h5>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrar.emit()">
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+
+    <h2 class="text-center mb-3">Listado de Ventas</h2>
+    <p class="text-center text-muted">
+        Fecha: {{ hoy | date:'dd/MM/yyyy' }}
+    </p>
+
+    <!-- Acciones -->
+    <div class="d-flex justify-content-between mb-3">
+        <button class="btn btn-success" (click)="abrirAgregar()">+ Nueva Venta</button>
+        <button class="btn btn-outline-danger" (click)="descargarPDF()">Descargar PDF</button>
+    </div>
+
+    <app-registrar-venta *ngIf="mostrarAgregar" (cerrar)="cerrarAgregar()">
+    </app-registrar-venta>
+
+    <!-- Resumen -->
+    <div class="card shadow-sm mb-4 text-center p-3 mt-3">
+        <h5>Total vendido</h5>
+        <h3>${{ totalVentas | number:'1.0-0' }}</h3>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-3">
+        <div class="col">
+            <input type="text" class="form-control" placeholder="Buscar cliente..." [(ngModel)]="busquedaCliente"
+                (ngModelChange)="actualizarFiltro()">
+        </div>
+
+        <div class="col">
+            <input type="date" class="form-control" [(ngModel)]="busquedaFecha" (ngModelChange)="actualizarFiltro()">
+        </div>
+
+        <div class="col">
+            <select class="form-select" [(ngModel)]="zonaSeleccionada" (change)="actualizarFiltro()">
+                <option value="">Todas las zonas</option>
+                <option *ngFor="let z of zonas" [value]="z">
+                    {{ z }}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <p>Ventas filtradas: {{ ventasFiltradas.length }}</p>
+
+    <!-- Tabla -->
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Zona</th>
+                    <th>Usuario</th>
+                    <th>Total</th>
+                    <th>Productos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let v of ventasFiltradas" [class.table-secondary]="v.estado === 'ANULADA'">
+                    <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td>{{ v.cliente?.nombreDueno || 'Consumidor Final' }}</td>
+                    <td>{{ v.cliente?.zona || '-' }}</td>
+                    <td>{{ v.usuario.nombre }}</td>
+                    <td>${{ v.total | number:'1.0-0' }}</td>
+                    <td>{{ v.detalles.length }}</td>
+                    <td>
+                        <span *ngIf="v.estado === 'ANULADA'" class="badge bg-danger">
+                            ANULADA
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-1" (click)="verDetalle(v)">Ver</button>
+                        <button class="btn btn-sm btn-danger" [disabled]="v.estado === 'ANULADA'" (click)="anular(v)">
+                            Anular
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <app-ver-detalle *ngIf="mostrarDetalle" [venta]="ventaSeleccionada" (cerrar)="cerrarDetalle()">
+    </app-ver-detalle>
+
+</div> 
+<br><br>
