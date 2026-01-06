@@ -27,4 +27,9 @@ export class HeaderComponent {
     console.log('Cerrando sesión...');
     this.router.navigate(['/login']);
   }
+
+  get nombreUsuario(): string {
+    return this.usuario?.nombre?.split(' ')[0] || 'Usuario';
+  }
+
 }

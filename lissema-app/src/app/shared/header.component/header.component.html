@@ -1,52 +1,48 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-header shadow-sm py-2">
+<nav class="navbar navbar-expand-lg bg-header shadow-sm py-2">
   <div class="container">
 
-    <a class="navbar-brand d-flex align-items-center blanco" routerLink="/productos">
-      <!-- <img src="assets/img/lisemma-logo.png" class="logo-navbar me-2" alt="Lissema"> -->
-      Lisemma
+    <!-- Logo + nombre -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/productos">
+      <img src="assets/img/lisemma-logo.png" class="logo-navbar me-2" alt="Lisemma">
+      <span class="brand-text">Lisemma</span>
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Menú -->
     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item mx-2">
-          <a class="nav-link" routerLink="/productos" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
+      <ul class="navbar-nav gap-2">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/productos" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             Productos
           </a>
         </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link" routerLink="/ventas" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-            Ventas</a>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/ventas" routerLinkActive="active">Ventas</a>
         </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link" routerLink="/reportes" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-            Reportes</a>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/reportes" routerLinkActive="active">Reportes</a>
         </li>
-        <li class="nav-item mx-2">
-          <a class="nav-link" routerLink="/clientes" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-            Clientes</a>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/clientes" routerLinkActive="active">Clientes</a>
         </li>
       </ul>
     </div>
 
-    <div class="d-flex align-items-center ms-auto">
-      <div class="dropdown">
-        <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="userDropdown"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          Usuario
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-          <li><a class="dropdown-item" (click)="cerrarSesion()">Cerrar sesión</a></li>
-        </ul>
-      </div>
+    <!-- Usuario -->
+    <div class="dropdown ms-auto">
+      <a class="user-btn dropdown-toggle" data-bs-toggle="dropdown">
+        {{ nombreUsuario }}
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end shadow">
+        <li>
+          <a class="dropdown-item text-danger" (click)="cerrarSesion()">
+            Cerrar sesión
+          </a>
+        </li>
+      </ul>
     </div>
 
   </div>

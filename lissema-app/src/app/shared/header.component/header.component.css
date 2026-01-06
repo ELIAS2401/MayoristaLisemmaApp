@@ -1,46 +1,53 @@
+/* HEADER */
 .bg-header {
-  background-color: #38b6ff;
+  background: linear-gradient(90deg, #38b6ff, #2b82c9);
 }
 
-.navbar-brand {
-  font-weight: bold;
-  font-size: 1.25rem;
-  cursor: pointer;
-}
-
+/* BRAND */
 .logo-navbar {
-  height: 35px;
+  height: 34px;
 }
 
-.nav-link {
-  font-weight: 500;
-  color: #fff !important;
-  cursor: pointer;
-}
-
-.nav-link:hover {
-  text-decoration: underline;
-}
-
-.nav-link.active {
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-.dropdown-menu-end {
-  right: 0;
-  left: auto;
-}
-
-.btn-outline-secondary {
-  background-color: #2b2b2b !important;
+.brand-text {
+  font-weight: 600;
+  font-size: 1.25rem;
   color: #fff;
 }
 
-a {
-  cursor: pointer;
+/* LINKS */
+.nav-link {
+  color: #eaf6ff !important;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-.blanco{
-  color: #1a1a1a;
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.nav-link.active {
+  background-color: #fff;
+  color: #0d6efd !important;
+  font-weight: 600;
+}
+
+/* USUARIO */
+.user-btn {
+  background-color: #1f1f1f;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.user-btn:hover {
+  background-color: #000;
+}
+
+/* GENERAL */
+a {
+  cursor: pointer;
 }
