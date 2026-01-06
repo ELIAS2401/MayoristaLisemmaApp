@@ -46,8 +46,7 @@ export class ListarVentas implements OnInit {
   ngOnInit() {
     this.ventas$.subscribe(v => {
       this.ventasOriginal = [...v];
-      this.ventasFiltradas = [...v];
-      this.busquedaFecha = new Date().toISOString().slice(0, 10);
+      this.ventasFiltradas = [...v]; // TODAS al entrar
 
       this.zonas = [
         ...new Set(
@@ -63,6 +62,7 @@ export class ListarVentas implements OnInit {
 
     this.ventaService.cargarVentas();
   }
+
 
   verDetalle(venta: Venta) {
     this.ventaSeleccionada = venta;
@@ -118,6 +118,21 @@ export class ListarVentas implements OnInit {
     this.totalVentas = this.ventasFiltradas
       .filter(v => v.estado !== 'ANULADA') // opcional pero recomendado
       .reduce((sum, v) => sum + Number(v.total), 0);
+  }
+
+  filtrarHoy() {
+    const hoy = new Date().toISOString().slice(0, 10);
+    this.busquedaFecha = hoy;
+    this.actualizarFiltro();
+  }
+  
+  limpiarFiltros() {
+    this.busquedaCliente = '';
+    this.busquedaFecha = '';
+    this.zonaSeleccionada = '';
+
+    this.ventasFiltradas = [...this.ventasOriginal];
+    this.calcularTotalVentas();
   }
 
   descargarPDF() {

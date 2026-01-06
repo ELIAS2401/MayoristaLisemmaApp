@@ -1,5 +1,6 @@
 import { Venta } from './interfaces/venta.interface';
 import { Routes } from '@angular/router';
+import { authGuard } from './features/auth/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -18,19 +19,27 @@ export const routes: Routes = [
       import('./features/auth/pages/login/login').then(c => c.Login)
   },
   {
-    path: 'productos', loadComponent: () =>
+    path: 'productos',
+    canActivate: [authGuard],
+    loadComponent: () =>
       import('./features/productos/pages/listar-productos/productos').then(c => c.Productos)
   },
   {
-    path: 'clientes', loadComponent: () =>
+    path: 'clientes',
+    canActivate: [authGuard],
+    loadComponent: () =>
       import('./features/clientes/pages/listar-clientes/listar-clientes').then(c => c.ListarClientes)
   },
   {
-    path: 'ventas', loadComponent: () =>
+    path: 'ventas',
+    canActivate: [authGuard],
+    loadComponent: () =>
       import('./features/ventas/pages/listar-ventas/listar-ventas').then(c => c.ListarVentas)
   },
   {
-    path: 'reportes', loadComponent: () =>
+    path: 'reportes',
+    canActivate: [authGuard],
+    loadComponent: () =>
       import('./features/reportes/pages/listar-reportes/listar-reportes').then(c => c.ListarReportes)
   },
 ];

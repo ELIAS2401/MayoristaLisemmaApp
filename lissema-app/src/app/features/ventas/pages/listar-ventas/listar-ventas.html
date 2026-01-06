@@ -29,9 +29,20 @@
                 (ngModelChange)="actualizarFiltro()">
         </div>
 
-        <div class="col">
+
+
+        <div class="col d-flex gap-2">
             <input type="date" class="form-control" [(ngModel)]="busquedaFecha" (ngModelChange)="actualizarFiltro()">
+
+            <button class="btn btn-outline-primary" (click)="filtrarHoy()">
+                Hoy
+            </button>
+
+            <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+                Limpiar
+            </button>
         </div>
+
 
         <div class="col">
             <select class="form-select" [(ngModel)]="zonaSeleccionada" (change)="actualizarFiltro()">
@@ -86,5 +97,5 @@
     <app-ver-detalle *ngIf="mostrarDetalle" [venta]="ventaSeleccionada" (cerrar)="cerrarDetalle()">
     </app-ver-detalle>
 
-</div> 
+</div>
 <br><br>

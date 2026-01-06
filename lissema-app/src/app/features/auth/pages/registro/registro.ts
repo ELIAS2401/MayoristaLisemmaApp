@@ -95,4 +95,7 @@ export class Registro {
       queryParams: { registrado: 'ok' }
     });
   }
+  irALogin2() {
+    this.router.navigate(['/login']);
+  }
 }

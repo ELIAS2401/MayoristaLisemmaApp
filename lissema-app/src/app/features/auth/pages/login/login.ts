@@ -24,6 +24,11 @@ export class Login {
   private authService = inject(AuthService);
 
   ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/productos']);
+      return;
+    }
+
     this.route.queryParams.subscribe(params => {
       if (params['registrado'] === 'ok') {
         this.mensajeExito = 'Registro exitoso. Ya podés iniciar sesión.';
@@ -40,7 +45,7 @@ export class Login {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/home']); // Redirigir al home u otra página
+        this.router.navigate(['/productos']); // Redirigir al home u otra página
       }
 
       , error: (err) => {
