@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "build:gh": "ng build --configuration production --base-href /NOMBRE_DEL_REPO/",
-    "deploy": "gh-pages -d dist/MayoristaLisemmaApp"
+    "build:gh": "ng build --configuration production --base-href /MayoristaLisemmaApp/",
+    "deploy": "gh-pages -d dist/lissema-app --dotfiles"
   },
   "prettier": {
     "printWidth": 100,
