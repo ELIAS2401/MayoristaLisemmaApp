@@ -5,7 +5,7 @@ import { authGuard } from './features/auth/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/registro',
+    redirectTo: 'registro',
     pathMatch: 'full'
   },
   {
