@@ -4,6 +4,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -40,17 +41,19 @@ export class Login {
     this.router.navigate(['/registro']);
   }
 
-  loguearse() {
+  loguearse(form: NgForm) {
+    this.mensajeError = '';
     this.loading = true;
+
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/productos']); // Redirigir al home u otra página
-      }
-
-      , error: (err) => {
+        this.router.navigate(['/productos']);
+      },
+      error: () => {
         this.loading = false;
         this.mensajeError = 'Mail y/o contraseña incorrectos.';
+        form.control.markAllAsTouched(); // 👈 clave
       }
     });
   }
