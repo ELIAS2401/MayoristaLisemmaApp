@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -12,19 +13,20 @@ import { AuthService } from '../../services/auth';
   styleUrl: './login.css',
 })
 export class Login {
-
+  submitted = false;
   loading = false;
   mensajeError = '';
   mensajeExito = '';
 
+  private cdr = inject(ChangeDetectorRef);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  loginForm = this.fb.group({
+  loginForm = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
 
   ngOnInit() {
@@ -41,28 +43,45 @@ export class Login {
   }
 
   loguearse() {
+    this.submitted = true;
+    this.loginForm.markAllAsTouched();
+    this.mensajeError = '';
+
     if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+      this.mensajeError = 'Completá correctamente los campos.';
+      this.cdr.detectChanges(); // 👈 CLAVE
       return;
     }
 
     this.loading = true;
-    this.mensajeError = '';
 
-    const { email, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.getRawValue();
 
-    this.authService.login(email!, password!).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/productos']);
-      },
-      error: () => {
-        this.loading = false;
-        this.mensajeError = 'Mail y/o contraseña incorrectos.';
-      }
-    });
+    this.authService.login(email, password)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+          this.cdr.detectChanges(); // 👈 CLAVE
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/productos']);
+        },
+        error: (err) => {
+
+          if (err.status === 0) {
+            this.mensajeError = 'No se pudo conectar con el servidor. Intentalo más tarde.';
+          } else if (err.status === 401 || err.status === 403) {
+            this.mensajeError = 'Mail o contraseña incorrectos.';
+          } else {
+            this.mensajeError = 'Ocurrió un error inesperado.';
+          }
+
+          this.cdr.detectChanges(); // 👈 ESTO HACE QUE SE VEA INMEDIATO
+        }
+      });
   }
-
   irARegistro() {
     this.router.navigate(['/registro']);
   }

@@ -9,19 +9,28 @@
                         <img src="assets/img/lisemma-logo.png" alt="Lissema" class="logo">
                     </div>
 
-                    <h3 class="text-center mb-4 titulo">Iniciar Sesion</h3>
+                    <h3 class="text-center mb-4 titulo">Iniciar Sesión</h3>
+
                     <div *ngIf="mensajeExito" class="alert alert-success">
                         {{ mensajeExito }}
                     </div>
+
                     <form [formGroup]="loginForm" (ngSubmit)="loguearse()">
 
                         <div class="mb-3">
                             <label>Email</label>
                             <input type="email" class="form-control" formControlName="email"
                                 placeholder="nombre@ejemplo.com" />
+
                             <small class="text-danger"
-                                *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
-                                Email inválido
+                                *ngIf="(loginForm.controls.email.touched || submitted) && loginForm.controls.email.invalid">
+
+                                <span *ngIf="loginForm.controls.email.errors?.['required']">
+                                    El email es obligatorio
+                                </span>
+                                <span *ngIf="loginForm.controls.email.errors?.['email']">
+                                    El email no es válido
+                                </span>
                             </small>
                         </div>
 
@@ -29,9 +38,14 @@
                             <label>Contraseña</label>
                             <input type="password" class="form-control" formControlName="password"
                                 placeholder="Ingresá tu contraseña" />
+
+                            <small class="text-danger"
+                                *ngIf="(loginForm.controls.password.touched || submitted) && loginForm.controls.password.invalid">
+                                La contraseña es obligatoria
+                            </small>
                         </div>
 
-                        <button class="btn btn-primary w-100" type="submit" [disabled]="loading">
+                        <button type="submit" class="btn btn-primary w-100 boton" [disabled]="loading">
                             {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
                         </button>
 
@@ -40,60 +54,14 @@
                         </div>
 
                     </form>
-                    <div *ngIf="mensajeError" class="login-error mt-3">
-                        {{ mensajeError }}
-                    </div>
+
+                    <button class="btn btn-primary w-100 botonSecundario mt-3" type="button" (click)="irARegistro()">
+                        Ir a Registro
+                    </button>
+
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-
-<style>
-    .titulo {
-        color: #202020;
-        /* rojo marca */
-        font-weight: 700;
-    }
-
-    .boton {
-        background-color: #38b6ff;
-        border-color: #38b6ff;
-        font-weight: 600;
-    }
-
-    .boton:hover {
-        background-color: #1aa8ff;
-        border-color: #1aa8ff;
-    }
-
-    .botonSecundario {
-        background-color: #f90000;
-        border-color: #f90000;
-        font-weight: 600;
-    }
-
-    .botonSecundario:hover {
-        background-color: #e60000;
-        border-color: #e60000;
-    }
-
-    .form-control:focus {
-        border-color: #38b6ff !important;
-        box-shadow: 0 0 0 0.2rem rgba(56, 182, 255, 0.25) !important;
-    }
-
-    .logo {
-        width: 160px;
-        height: auto;
-        object-fit: contain;
-    }
-
-    .divider {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        margin: 0.5rem 0;
-    }
-</style>
