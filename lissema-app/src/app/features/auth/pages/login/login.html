@@ -13,30 +13,32 @@
                     <div *ngIf="mensajeExito" class="alert alert-success">
                         {{ mensajeExito }}
                     </div>
-                    <form #loginForm="ngForm" (ngSubmit)="loguearse(loginForm)">
+                    <form [formGroup]="loginForm" (ngSubmit)="loguearse()">
 
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input id="email" type="email" pInputText [(ngModel)]="email" name="email" required
-                                class="form-control" placeholder="nombre@ejemplo.com" />
+                            <label>Email</label>
+                            <input type="email" class="form-control" formControlName="email"
+                                placeholder="nombre@ejemplo.com" />
+                            <small class="text-danger"
+                                *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+                                Email inválido
+                            </small>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Contraseña</label>
-                            <input id="contraseña" type="password" pInputText [(ngModel)]="password" name="contraseña"
-                                required class="form-control" placeholder="Ingresa tu contraseña" />
+                            <label>Contraseña</label>
+                            <input type="password" class="form-control" formControlName="password"
+                                placeholder="Ingresá tu contraseña" />
                         </div>
 
-                        <button class="btn btn-primary w-100 boton" type="submit" [disabled]="loading">
+                        <button class="btn btn-primary w-100" type="submit" [disabled]="loading">
                             {{ loading ? 'Ingresando...' : 'Iniciar sesión' }}
                         </button>
 
-                        <br><br>
+                        <div *ngIf="mensajeError" class="alert alert-danger mt-3">
+                            {{ mensajeError }}
+                        </div>
 
-
-                        <button class="btn btn-primary w-100 botonSecundario" type="button" (click)="irARegistro()">
-                            Ir a Registro
-                        </button>
                     </form>
                     <div *ngIf="mensajeError" class="login-error mt-3">
                         {{ mensajeError }}

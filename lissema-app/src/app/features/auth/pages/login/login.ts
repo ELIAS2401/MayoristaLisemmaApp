@@ -1,28 +1,31 @@
-import { For } from './../../../../../../node_modules/@babel/types/lib/index-legacy.d';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth';
-import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
 
-  email: string = '';
-  password: string = ''
-  mensajeError: string = '';
-  loading: boolean = false;
-  mensajeExito: string = '';
+  loading = false;
+  mensajeError = '';
+  mensajeExito = '';
 
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
+  });
 
   ngOnInit() {
     if (this.authService.isLoggedIn()) {
@@ -37,15 +40,18 @@ export class Login {
     });
   }
 
-  irARegistro() {
-    this.router.navigate(['/registro']);
-  }
+  loguearse() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
 
-  loguearse(form: NgForm) {
-    this.mensajeError = '';
     this.loading = true;
+    this.mensajeError = '';
 
-    this.authService.login(this.email, this.password).subscribe({
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email!, password!).subscribe({
       next: () => {
         this.loading = false;
         this.router.navigate(['/productos']);
@@ -53,8 +59,11 @@ export class Login {
       error: () => {
         this.loading = false;
         this.mensajeError = 'Mail y/o contraseña incorrectos.';
-        form.control.markAllAsTouched(); // 👈 clave
       }
     });
+  }
+
+  irARegistro() {
+    this.router.navigate(['/registro']);
   }
 }
