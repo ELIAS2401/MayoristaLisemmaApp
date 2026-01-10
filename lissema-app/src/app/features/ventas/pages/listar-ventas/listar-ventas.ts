@@ -142,32 +142,29 @@ export class ListarVentas implements OnInit {
     this.calcularTotalVentas();
   }
 
-  descargarPDF() {
-
+  descargarResumenPDF() {
     const ventas = this.ventasFiltradas.filter(v => v.estado !== 'ANULADA');
-
-    this.calcularResumenZona();
 
     if (ventas.length === 0) {
       alert('No hay ventas activas para imprimir');
       return;
     }
 
+    this.calcularResumenZona();
+
     const doc = new jsPDF();
     let y = 20;
 
-    // LOGO
     const img = new Image();
     img.src = 'assets/img/lisemma-logo.png';
     doc.addImage(img, 'PNG', 80, 5, 50, 20);
 
-    // TITULO
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
-    doc.text('Reporte de Ventas', 14, y + 20);
+    doc.text('Resumen de Ventas', 14, y + 20);
 
-    doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
     doc.text(
       `Fecha de impresión: ${new Date().toLocaleDateString()}`,
       14,
@@ -175,157 +172,34 @@ export class ListarVentas implements OnInit {
     );
 
     if (this.zonaSeleccionada) {
-      doc.text(
-        `Zona: ${this.zonaSeleccionada}`,
-        120,
-        y + 28
-      );
+      doc.text(`Zona: ${this.zonaSeleccionada}`, 120, y + 28);
     }
 
     y += 40;
 
-    /* =========================
-      RESUMEN POR ZONA
-    ========================= */
-
-    if (this.resumenZona.length > 0) {
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(13);
-      doc.text(
-        this.zonaSeleccionada
-          ? `Resumen Zona: ${this.zonaSeleccionada}`
-          : 'Resumen de todas las zonas',
-        14,
-        y
-      );
-      y += 6;
-
-      doc.setFontSize(10);
-      doc.text(
-        `Total de productos vendidos: ${this.totalProductosZona}`,
-        14,
-        y
-      );
-      y += 4;
-
-      autoTable(doc, {
-        startY: y,
-        head: [['Producto', 'Cantidad total']],
-        body: this.resumenZona.map(r => [
-          r.producto,
-          r.cantidad
-        ]),
-        styles: {
-          fontSize: 9
-        },
-        headStyles: {
-          fillColor: [230, 230, 230],
-          textColor: 20,
-          fontStyle: 'bold'
-        }
-      });
-
-      y = (doc as any).lastAutoTable.finalY + 10;
-    }
-
-    ventas.forEach((venta) => {
-
-      if (y > 250) {
-        doc.addPage();
-        y = 20;
+    autoTable(doc, {
+      startY: y,
+      head: [['Producto', 'Cantidad total']],
+      body: this.resumenZona.map(r => [r.producto, r.cantidad]),
+      styles: { fontSize: 9 },
+      headStyles: {
+        fillColor: [230, 230, 230],
+        textColor: 20,
+        fontStyle: 'bold'
       }
-
-      /* =========================
-         ENCABEZADO DE VENTA
-      ========================== */
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(14);
-      doc.text(`VENTA #${venta.id}`, 14, y);
-
-      y += 3;
-      doc.setDrawColor(180);
-      doc.line(14, y, 196, y);
-      y += 6;
-
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-
-      // FILA 1
-      doc.text(
-        `Fecha: ${new Date(venta.fecha).toLocaleString()}`,
-        14,
-        y
-      );
-      doc.text(
-        `Cliente: ${venta.cliente?.nombreDueno || 'Consumidor Final'}`,
-        110,
-        y
-      );
-      y += 5;
-
-      // FILA 2
-      doc.text(
-        `Dirección: ${venta.cliente?.direccion || '-'}`,
-        14,
-        y
-      );
-      doc.text(
-        `Zona: ${venta.cliente?.zona || '-'}`,
-        110,
-        y
-      );
-      y += 8;
-
-      /* =========================
-         TABLA DE PRODUCTOS
-      ========================== */
-
-      autoTable(doc, {
-        startY: y,
-        head: [['Producto', 'Cant.', 'Precio Unit.', 'Subtotal']],
-        body: venta.detalles.map(d => [
-          d.producto.nombre,
-          d.cantidad,
-          `$${Number(d.precioUnitario).toLocaleString()}`,
-          `$${Number(d.cantidad * d.precioUnitario).toLocaleString()}`
-        ]),
-        styles: {
-          fontSize: 9
-        },
-        headStyles: {
-          fillColor: [230, 230, 230],
-          textColor: 20,
-          fontStyle: 'bold'
-        }
-      });
-
-      y = (doc as any).lastAutoTable.finalY + 6;
-
-      /* =========================
-         TOTAL
-      ========================== */
-
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text(
-        `TOTAL: $${Number(venta.total).toLocaleString()}`,
-        196,
-        y,
-        { align: 'right' }
-      );
-
-      y += 6;
-
-      // SEPARADOR FINAL
-      doc.setDrawColor(200);
-      doc.line(14, y, 196, y);
-      y += 10;
     });
 
-    doc.save('ventas-filtradas.pdf');
+    y = (doc as any).lastAutoTable.finalY + 5;
+
+    doc.text(
+      `Total de productos vendidos: ${this.totalProductosZona}`,
+      14,
+      y
+    );
+
+    doc.save('resumen-ventas.pdf');
   }
+
 
   calcularResumenZona() {
     const mapa = new Map<string, number>();
@@ -357,6 +231,66 @@ export class ListarVentas implements OnInit {
     if (this.mostrarResumenZona) {
       this.calcularResumenZona();
     }
+  }
+
+  descargarFactura(venta: Venta) {
+    const doc = new jsPDF();
+    let y = 20;
+
+    const img = new Image();
+    img.src = 'assets/img/lisemma-logo.png';
+    doc.addImage(img, 'PNG', 80, 5, 50, 20);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text(`Factura - Venta #${venta.id}`, 14, y + 20);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+
+    y += 35;
+
+    doc.text(`Fecha: ${new Date(venta.fecha).toLocaleString()}`, 14, y);
+    y += 5;
+    doc.text(`Vendedor: ${venta.usuario.nombre}`, 14, y);
+    y += 5;
+    doc.text(`Cliente: ${venta.cliente?.nombreDueno || 'Consumidor Final'}`, 14, y);
+    y += 5;
+    doc.text(`Zona: ${venta.cliente?.zona || '-'}`, 14, y);
+    y += 5;
+    doc.text(`Dirección: ${venta.cliente?.direccion}`, 14, y);
+
+    y += 8;
+
+    autoTable(doc, {
+      startY: y,
+      head: [['Producto', 'Cant.', 'Precio Unit.', 'Subtotal']],
+      body: venta.detalles.map(d => [
+        d.producto.nombre,
+        d.cantidad,
+        `$${Number(d.precioUnitario).toLocaleString()}`,
+        `$${Number(d.cantidad * d.precioUnitario).toLocaleString()}`
+      ]),
+      styles: { fontSize: 9 },
+      headStyles: {
+        fillColor: [230, 230, 230],
+        textColor: 20,
+        fontStyle: 'bold'
+      }
+    });
+
+    y = (doc as any).lastAutoTable.finalY + 6;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text(
+      `TOTAL: $${Number(venta.total).toLocaleString()}`,
+      196,
+      y,
+      { align: 'right' }
+    );
+
+    doc.save(`factura-venta-${venta.id}.pdf`);
   }
 
 

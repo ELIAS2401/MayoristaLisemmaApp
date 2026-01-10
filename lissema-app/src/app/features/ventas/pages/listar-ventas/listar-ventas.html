@@ -11,7 +11,9 @@
     <div class="d-flex justify-content-between mb-3">
         <button class="btn btn-success" (click)="abrirAgregar()">+ Nueva Venta</button>
         <div class="d-flex justify-content-between gap-2">
-            <button class="btn btn-outline-danger" (click)="descargarPDF()">Descargar PDF</button>
+            <button class="btn btn-outline-danger" (click)="descargarResumenPDF()">
+                Descargar PDF
+            </button>
             <div *ngIf="ventasFiltradas.length > 0" class="text-center">
                 <button class="btn btn-outline-primary" (click)="toggleResumenZona()">
                     {{ mostrarResumenZona ? 'Ocultar resumen' : 'Ver resumen' }}
@@ -120,6 +122,10 @@
                     </td>
                     <td>
                         <button class="btn btn-sm btn-primary me-1" (click)="verDetalle(v)">Ver</button>
+                        <button class="btn btn-sm btn-secondary me-1" (click)="descargarFactura(v)"
+                            [disabled]="v.estado === 'ANULADA'">
+                            Factura
+                        </button>
                         <button class="btn btn-sm btn-danger" [disabled]="v.estado === 'ANULADA'" (click)="anular(v)">
                             Anular
                         </button>
