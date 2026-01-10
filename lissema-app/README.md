@@ -62,6 +62,6 @@ For more information on using the Angular CLI, including detailed command refere
 ================== Subir cambios: =======================
 
 cd C:\dev\MayoristaLisemmaApp\lissema-app
-npm run build:gh
+ng build --configuration production --base-href /MayoristaLisemmaApp/
 cd ..
 npx gh-pages -d lissema-app/dist/lissema-app/browser --no-history
