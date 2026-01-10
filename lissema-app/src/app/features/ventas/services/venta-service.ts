@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Venta } from '../../../interfaces/venta.interface';
 import { environment } from '../../../../environments/environment';
-
+import { AuthService } from '../../auth/services/auth';
+import { inject } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +14,7 @@ export class VentaService {
 
   private ventasSubject = new BehaviorSubject<Venta[]>([]);
   ventas$ = this.ventasSubject.asObservable();
-
+  private authService = inject(AuthService);
   constructor(private http: HttpClient) { }
 
   cargarVentas() {
@@ -38,6 +39,8 @@ export class VentaService {
   }
 
   agregarVenta(data: any) {
-    return this.http.post(`${this.baseApiUrl}`, data);
+    return this.http.post(`${this.baseApiUrl}`, data, {
+      headers: this.authService.getAuthHeaders()
+    });
   }
 }
