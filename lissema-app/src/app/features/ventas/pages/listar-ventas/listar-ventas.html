@@ -10,7 +10,41 @@
     <!-- Acciones -->
     <div class="d-flex justify-content-between mb-3">
         <button class="btn btn-success" (click)="abrirAgregar()">+ Nueva Venta</button>
-        <button class="btn btn-outline-danger" (click)="descargarPDF()">Descargar PDF</button>
+        <div class="d-flex justify-content-between gap-2">
+            <button class="btn btn-outline-danger" (click)="descargarPDF()">Descargar PDF</button>
+            <div *ngIf="ventasFiltradas.length > 0" class="text-center">
+                <button class="btn btn-outline-primary" (click)="toggleResumenZona()">
+                    {{ mostrarResumenZona ? 'Ocultar resumen' : 'Ver resumen' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="mostrarResumenZona" class="card shadow-sm mt-3">
+        <div class="card-body">
+            <h5 class="text-center mb-3">
+                Resumen {{ zonaSeleccionada ? 'Zona: ' + zonaSeleccionada : 'de todas las zonas' }}
+            </h5>
+
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-end">Cantidad total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of resumenZona">
+                        <td>{{ r.producto }}</td>
+                        <td class="text-end">{{ r.cantidad }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-center mb-2">
+                <strong>Total de productos vendidos:</strong>
+                {{ totalProductosZona }}
+            </div>
+        </div>
     </div>
 
     <app-registrar-venta *ngIf="mostrarAgregar" (cerrar)="cerrarAgregar()">

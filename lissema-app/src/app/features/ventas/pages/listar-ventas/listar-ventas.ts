@@ -43,6 +43,10 @@ export class ListarVentas implements OnInit {
   zonas: string[] = [];
   zonaSeleccionada = '';
 
+  mostrarResumenZona = false;
+  resumenZona: { producto: string; cantidad: number }[] = [];
+  totalProductosZona = 0;
+
   ngOnInit() {
     this.ventas$.subscribe(v => {
       this.ventasOriginal = [...v];
@@ -112,6 +116,9 @@ export class ListarVentas implements OnInit {
       return clienteOk && fechaOk && zonaOk;
     });
     this.calcularTotalVentas();
+    if (this.mostrarResumenZona) {
+      this.calcularResumenZona();
+    }
   }
 
   calcularTotalVentas() {
@@ -125,7 +132,7 @@ export class ListarVentas implements OnInit {
     this.busquedaFecha = hoy;
     this.actualizarFiltro();
   }
-  
+
   limpiarFiltros() {
     this.busquedaCliente = '';
     this.busquedaFecha = '';
@@ -138,6 +145,8 @@ export class ListarVentas implements OnInit {
   descargarPDF() {
 
     const ventas = this.ventasFiltradas.filter(v => v.estado !== 'ANULADA');
+
+    this.calcularResumenZona();
 
     if (ventas.length === 0) {
       alert('No hay ventas activas para imprimir');
@@ -174,6 +183,51 @@ export class ListarVentas implements OnInit {
     }
 
     y += 40;
+
+    /* =========================
+      RESUMEN POR ZONA
+    ========================= */
+
+    if (this.resumenZona.length > 0) {
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.text(
+        this.zonaSeleccionada
+          ? `Resumen Zona: ${this.zonaSeleccionada}`
+          : 'Resumen de todas las zonas',
+        14,
+        y
+      );
+      y += 6;
+
+      doc.setFontSize(10);
+      doc.text(
+        `Total de productos vendidos: ${this.totalProductosZona}`,
+        14,
+        y
+      );
+      y += 4;
+
+      autoTable(doc, {
+        startY: y,
+        head: [['Producto', 'Cantidad total']],
+        body: this.resumenZona.map(r => [
+          r.producto,
+          r.cantidad
+        ]),
+        styles: {
+          fontSize: 9
+        },
+        headStyles: {
+          fillColor: [230, 230, 230],
+          textColor: 20,
+          fontStyle: 'bold'
+        }
+      });
+
+      y = (doc as any).lastAutoTable.finalY + 10;
+    }
 
     ventas.forEach((venta) => {
 
@@ -271,6 +325,38 @@ export class ListarVentas implements OnInit {
     });
 
     doc.save('ventas-filtradas.pdf');
+  }
+
+  calcularResumenZona() {
+    const mapa = new Map<string, number>();
+    let total = 0;
+
+    this.ventasFiltradas
+      .filter(v => v.estado !== 'ANULADA')
+      .forEach(venta => {
+        venta.detalles.forEach(det => {
+          const nombre = det.producto.nombre;
+          const cant = Number(det.cantidad);
+
+          mapa.set(nombre, (mapa.get(nombre) || 0) + cant);
+          total += cant;
+        });
+      });
+
+    this.resumenZona = Array.from(mapa.entries()).map(
+      ([producto, cantidad]) => ({ producto, cantidad })
+    );
+
+    this.totalProductosZona = total;
+  }
+
+
+  toggleResumenZona() {
+    this.mostrarResumenZona = !this.mostrarResumenZona;
+
+    if (this.mostrarResumenZona) {
+      this.calcularResumenZona();
+    }
   }
 
 
