@@ -26,10 +26,10 @@ export class AuthService {
   // CONSTRUCTOR
   // =========================
   constructor() {
-    const token = localStorage.getItem('token');
+    const accessToken = localStorage.getItem('accessToken');
     const user = localStorage.getItem('usuario');
 
-    if (token && user) {
+    if (accessToken && user) {
       this._isLoggedIn.next(true);
       this._currentUser.next(JSON.parse(user));
     }
@@ -45,19 +45,29 @@ export class AuthService {
   // =========================
   // LOGIN
   // =========================
-  login(email: string, password: string): Observable<{ token: string; user: Usuario }> {
-    return this.http
-      .post<{ token: string; user: Usuario }>(`${this.baseApiUrl}/login`, { email, password })
+  login(email: string, password: string) {
+    return this.http.post<any>(`${this.baseApiUrl}/login`, { email, password })
       .pipe(
         tap(res => {
-          if (res.token && res.user) {
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('usuario', JSON.stringify(res.user));
-            this.setCurrentUser(res.user);
-          }
+          localStorage.setItem('accessToken', res.accessToken);
+          localStorage.setItem('refreshToken', res.refreshToken);
+          localStorage.setItem('usuario', JSON.stringify(res.user));
+          this.setCurrentUser(res.user);
         })
       );
   }
+  getAccessToken() {
+    return localStorage.getItem('accessToken');
+  }
+
+  getRefreshToken() {
+    return localStorage.getItem('refreshToken');
+  }
+
+  saveAccessToken(token: string) {
+    localStorage.setItem('accessToken', token);
+  }
+
 
   // =========================
   // USUARIO ACTUAL
@@ -79,7 +89,8 @@ export class AuthService {
   // LOGOUT
   // =========================
   logout() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('usuario');
     sessionStorage.removeItem('idUsuario');
 
