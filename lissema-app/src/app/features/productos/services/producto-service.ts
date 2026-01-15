@@ -20,6 +20,7 @@ export class ProductoService {
       next: p => {
         const productosConvertidos = p.map(item => ({
           ...item,
+          activo: item.activo ?? true,
           categoria: item.categoria ?? { nombre: "-" },
           costoUnitario: Number(item.costoUnitario ?? 0),
           precioUnitario: Number(item.precioUnitario ?? 0),

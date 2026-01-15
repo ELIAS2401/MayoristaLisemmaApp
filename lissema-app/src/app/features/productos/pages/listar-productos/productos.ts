@@ -41,6 +41,7 @@ export class Productos implements OnInit {
     // 1) Primero te suscribís al observable
     this.productos$.subscribe(prods => {
       console.log("PRODS:", prods);
+      const activos = prods.filter(p => p.activo !== false);
 
       this.productosOriginal = [...prods];
       this.productosFiltradosList = [...prods];

@@ -69,7 +69,7 @@
                     </thead>
 
                     <tbody>
-                        <tr *ngFor="let p of productosFiltradosList">
+                        <tr *ngFor="let p of productosFiltradosList" [class.table-secondary]="p.activo === false">
                             <td>{{ p.nombre }}</td>
                             <td>{{ p.categoria?.nombre || '-' }}</td>
                             <td>{{ p.stock }}</td>
@@ -78,9 +78,21 @@
                             <td>${{ (p.costoUnitario * (p.stock??0)) | number:'1.0-0' }}</td>
                             <td>${{ (p.precioUnitario * (p.stock??0)) | number:'1.0-0' }}</td>
                             <td>
-                                <button class="btn btn-primary btn-sm me-1" (click)="editar(p.id!)">Editar</button>
-                                <button class="btn btn-danger btn-sm" (click)="eliminar(p.id!)">×</button>
+                                <button class="btn btn-primary btn-sm me-1" [disabled]="p.activo === false"
+                                    (click)="editar(p.id!)">
+                                    Editar
+                                </button>
+
+                                <button *ngIf="p.activo !== false" class="btn btn-danger btn-sm"
+                                    (click)="eliminar(p.id!)">
+                                    ×
+                                </button>
+
+                                <span *ngIf="p.activo === false" class="badge bg-secondary">
+                                    Inactivo
+                                </span>
                             </td>
+
                         </tr>
                     </tbody>
 

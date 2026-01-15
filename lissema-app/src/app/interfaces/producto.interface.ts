@@ -10,5 +10,6 @@ export interface Producto {
   costoUnitario: number;
   precioUnitario: number;
   creadoEn?: Date;
+  activo?: boolean;
   detalleVentas?: DetalleVenta[];
 }
