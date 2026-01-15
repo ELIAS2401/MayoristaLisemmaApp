@@ -41,21 +41,28 @@
 
     <!-- KPIs -->
     <div class="row text-center mb-4">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3 shadow-sm">
                 <h6>Total vendido</h6>
                 <h3>${{ totalVendido | number:'1.0-0' }}</h3>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card p-3 shadow-sm">
+                <h6>Ganancia total</h6>
+                <h3>${{ gananciaTotal | number:'1.0-0' }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
             <div class="card p-3 shadow-sm">
                 <h6>Cantidad de ventas</h6>
                 <h3>{{ cantidadVentas }}</h3>
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card p-3 shadow-sm">
                 <h6>Ticket promedio</h6>
                 <h3>${{ ticketPromedio | number:'1.0-0' }}</h3>

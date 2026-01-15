@@ -34,6 +34,27 @@
           </tr>
         </tbody>
       </table>
+      <div *ngIf="venta.notaCredito">
+        <hr>
+
+        <h6 class="text-success mb-2">Nota de Crédito aplicada</h6>
+
+        <p class="mb-1">
+          <b>ID:</b> #{{ venta.notaCredito.id }}
+        </p>
+
+        <p class="mb-1">
+          <b>Monto usado:</b> ${{ venta.montoNotaUsado }}
+        </p>
+
+        <p class="mb-1">
+          <b>Estado actual:</b>
+          <span class="badge bg-success" *ngIf="venta.notaCredito.estado === 'USADA'">USADA</span>
+          <span class="badge bg-warning text-dark" *ngIf="venta.notaCredito.estado === 'PARCIAL'">PARCIAL</span>
+          <span class="badge bg-secondary" *ngIf="venta.notaCredito.estado === 'DISPONIBLE'">DISPONIBLE</span>
+        </p>
+      </div>
+
 
       <h5 class="text-end mt-3">
         Total: ${{ venta.total }}

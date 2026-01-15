@@ -27,6 +27,7 @@ export class ListarReportes implements OnInit {
   fechaHasta = '';
   zonaSeleccionada = '';
   clienteBusqueda = '';
+  gananciaTotal = 0;
 
   zonas: string[] = [];
 
@@ -121,6 +122,15 @@ export class ListarReportes implements OnInit {
     this.ticketPromedio = this.cantidadVentas
       ? this.totalVendido / this.cantidadVentas
       : 0;
+
+    // NUEVO: calcular ganancia total
+    this.gananciaTotal = this.ventasFiltradas.reduce((sum, venta) => {
+      const gananciaVenta = venta.detalles.reduce((sumaItem, detalle) => {
+        // Precio unitario menos costo unitario multiplicado por cantidad
+        return sumaItem + (detalle.precioUnitario - Number(detalle.producto.costoUnitario)) * detalle.cantidad;
+      }, 0);
+      return sum + gananciaVenta;
+    }, 0);
   }
 
   calcularVentasPorZona() {
@@ -196,6 +206,8 @@ export class ListarReportes implements OnInit {
 
     doc.setFontSize(10);
     doc.text(`Total vendido: $${this.totalVendido.toLocaleString()}`, 14, y);
+    y += 5;
+    doc.text(`Ganancia: $${this.gananciaTotal.toLocaleString()}`, 14, y);
     y += 5;
     doc.text(`Cantidad de ventas: ${this.cantidadVentas}`, 14, y);
     y += 5;

@@ -102,7 +102,7 @@ export class AuthService {
   // TOKEN / AUTH
   // =========================
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return localStorage.getItem('accessToken');
   }
 
   isLoggedIn(): boolean {

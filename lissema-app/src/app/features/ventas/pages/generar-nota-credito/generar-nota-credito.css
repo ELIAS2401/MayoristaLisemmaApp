@@ -1,0 +1,43 @@
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+}
+
+
+.modal-custom {
+  background: #fff;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh; /* CLAVE */
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header,
+.modal-footer {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+}
+
+.modal-body {
+  padding: 1rem;
+  overflow-y: auto; /* CLAVE */
+  flex: 1;          /* ocupa el espacio restante */
+}
+
+@media (max-width: 576px) {
+  .modal-custom {
+    width: 95%;
+    max-height: 95vh;
+  }
+}

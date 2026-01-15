@@ -9,11 +9,12 @@ import { VerDetalle } from '../ver-detalle/ver-detalle';
 import { RegistrarVenta } from '../registrar-venta/registrar-venta';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { NotaCredito } from '../generar-nota-credito/generar-nota-credito';
 
 @Component({
   selector: 'app-listar-ventas',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, VerDetalle, RegistrarVenta],
+  imports: [CommonModule, FormsModule, HeaderComponent, VerDetalle, RegistrarVenta, NotaCredito],
   templateUrl: './listar-ventas.html',
   styleUrls: ['./listar-ventas.css'],
 })
@@ -46,6 +47,8 @@ export class ListarVentas implements OnInit {
   mostrarResumenZona = false;
   resumenZona: { producto: string; cantidad: number }[] = [];
   totalProductosZona = 0;
+
+  mostrarNotaCredito = false;
 
   ngOnInit() {
     this.ventas$.subscribe(v => {
@@ -88,6 +91,10 @@ export class ListarVentas implements OnInit {
 
   anular(venta: Venta) {
     if (venta.estado === 'ANULADA') return;
+
+    if (venta.estado !== 'ACTIVA') {
+      throw new Error('Solo se pueden anular ventas ACTIVAS');
+    }
 
     if (confirm('¿Anular esta venta? El stock será restaurado.')) {
       this.ventaService.anularVenta(venta.id).subscribe(() => {
@@ -293,6 +300,15 @@ export class ListarVentas implements OnInit {
     doc.save(`factura-venta-${venta.id}.pdf`);
   }
 
+  abrirNotaCredito(venta: Venta) {
+    this.ventaSeleccionada = venta;
+    this.mostrarNotaCredito = true;
+  }
+
+  cerrarNotaCredito() {
+    this.mostrarNotaCredito = false;
+    this.ventaSeleccionada = undefined;
+  }
 
 }
 

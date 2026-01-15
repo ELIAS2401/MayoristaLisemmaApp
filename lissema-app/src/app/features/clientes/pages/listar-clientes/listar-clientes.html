@@ -49,10 +49,11 @@
                         <td>{{ c.email }}</td>
                         <td>{{ c.cuit }}</td>
 
-                        <td>
-                            <button class="btn btn-primary btn-sm me-1" (click)="editar(c.id!)">Editar</button>
-                            <button class="btn btn-danger btn-sm" (click)="eliminar(c.id!)">×</button>
+                        <td class="d-flex gap-1 justify-content-center flex-wrap">
+                            <button class="btn btn-primary btn-sm" (click)="editar(c.id!)">Editar</button>
+                            <button class="btn btn-danger btn-sm" (click)="eliminar(c.id!)">Eliminar</button>
                         </td>
+
                     </tr>
                 </tbody>
             </table>

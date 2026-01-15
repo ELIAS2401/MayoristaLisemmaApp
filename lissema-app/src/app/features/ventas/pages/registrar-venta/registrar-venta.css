@@ -1,29 +1,68 @@
-/* Fondo oscuro */
+/* =========================
+   FONDO OSCURO (OVERLAY)
+========================= */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
   z-index: 1000;
 }
 
-/* Tarjeta modal */
+
+/* =========================
+   TARJETA MODAL
+========================= */
 .modal-card {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 90%;
-  max-width: 900px;
-  max-height: 90vh;
+  width: 95%;
+  max-width: 850px;
+  max-height: 110vh;
   overflow-y: auto;
 
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 2.25rem;
 
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
   z-index: 1001;
+
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Scroll del modal */
+.modal-card::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-card::-webkit-scrollbar-thumb {
+  background: #ced4da;
+  border-radius: 4px;
+}
+
+
+/* =========================
+   NG-SELECT AJUSTES VISUALES
+========================= */
+ng-select {
+  display: block;
+}
+
+.ng-select .ng-select-container {
+  min-height: 38px;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  font-size: 0.95rem;
+}
+
+.ng-select.ng-select-focused .ng-select-container {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,.25);
+}
+
+.ng-dropdown-panel {
+  z-index: 2000; /* arriba del modal */
 }

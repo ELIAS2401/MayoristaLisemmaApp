@@ -1,0 +1,71 @@
+<div class="modal-backdrop-custom">
+
+  <div class="modal-custom">
+
+    <!-- HEADER -->
+    <div class="modal-header">
+      <h5>Nota de Crédito – Venta #{{ venta.id }}</h5>
+      <button class="btn-close" (click)="cerrar.emit()"></button>
+    </div>
+
+    <!-- BODY -->
+    <div class="modal-body">
+
+      <p><b>Cliente:</b> {{ venta.cliente?.nombreDueno || 'Consumidor Final' }}</p>
+      <p><b>Fecha:</b> {{ venta.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+
+      <hr>
+
+      <table class="table table-bordered table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Producto</th>
+            <th>Cant. vendida</th>
+            <th>Devolver</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let d of detalles">
+            <td>{{ d.producto.nombre }}</td>
+            <td class="text-center">{{ d.cantidadDisponible }}</td>
+            <td style="max-width: 120px">
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                min="0"
+                [max]="d.cantidadDisponible"
+                [(ngModel)]="d.devolver"
+                (ngModelChange)="recalcular()">
+            </td>
+            <td>${{ d.precioUnitario }}</td>
+            <td class="text-end">
+              ${{ d.devolver * d.precioUnitario || 0 }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h5 class="text-end text-danger mt-3">
+        Total a acreditar: ${{ totalCredito }}
+      </h5>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary me-1" (click)="cerrar.emit()">
+        Cancelar
+      </button>
+      <button
+        class="btn btn-danger"
+        (click)="confirmar()"
+        [disabled]="totalCredito <= 0">
+        Confirmar Nota de Crédito
+      </button>
+    </div>
+
+  </div>
+</div>

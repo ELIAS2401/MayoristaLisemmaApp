@@ -5,60 +5,103 @@
 
   <form [formGroup]="form">
 
-    <!-- Cliente -->
+    <!-- CLIENTE -->
     <label class="form-label">Cliente</label>
     <select class="form-select mb-3" formControlName="clienteId">
-      <option [ngValue]="null" disabled selected> Seleccione un cliente</option>
-      <option aria-placeholder="seleccione" *ngFor="let c of (clientes$ | async)" [ngValue]="c.id">
+      <option [ngValue]="null" disabled>Seleccione un cliente</option>
+      <option *ngFor="let c of (clientes$ | async)" [ngValue]="c.id">
         {{ c.nombreDueno }}
       </option>
     </select>
 
-    <!-- Producto -->
-    <div class="row">
-      <div class="col">
-        <select class="form-select" formControlName="productoId">
-          <option [ngValue]="null">Producto</option>
-          <option
-            *ngFor="let p of (productos$ | async)"
-            [ngValue]="p.id"
-            [disabled]="p.stock === 0"
-          >
-            {{ p.nombre }} - ${{ p.precioUnitario }} (Stock: {{ p.stock }})
-          </option>
-        </select>
+    <!-- NOTA DE CRÉDITO -->
+    <div *ngIf="notasCredito.length" class="mb-3">
+      <label class="form-label">Usar Nota de Crédito</label>
+
+      <select class="form-select" formControlName="notaCreditoId">
+        <option [ngValue]="null">No usar nota de crédito</option>
+        <option *ngFor="let n of notasCredito" [ngValue]="n.id">
+          Nota #{{ n.id }} – Disponible ${{ n.total - n.montoUsado }}
+        </option>
+      </select>
+
+      <div *ngIf="form.value.notaCreditoId" class="mt-2">
+        <label class="form-label">
+          Monto a usar de la nota
+        </label>
+
+        <input type="number" class="form-control" formControlName="montoNotaUsado" [max]="montoDisponibleNota"
+          [min]="0" />
+
+        <small class="text-muted">
+          Máximo disponible: ${{ montoDisponibleNota }}
+        </small>
       </div>
 
-      <div class="col-3">
-        <input type="number" class="form-control" formControlName="cantidad">
+
+      <!-- INFO VISUAL -->
+      <small class="text-success" *ngIf="form.value.notaCreditoId">
+        Se aplicará un descuento de hasta ${{ montoDisponibleNota }}
+      </small>
+    </div>
+    
+    <!-- PRODUCTO -->
+    <div class="row g-2 align-items-end mt-3">
+
+      <div class="col-12 col-md-6">
+        <label class="form-label">Producto</label>
+
+        <ng-select [items]="productosConStock" bindLabel="nombre" bindValue="id" placeholder="Buscar producto..."
+          formControlName="productoId" [searchable]="true" [clearable]="true" appendTo="body" (change)="onProductoSeleccionado($event)">
+          <ng-template ng-option-tmp let-item="item">
+            <div class="d-flex justify-content-between">
+              <span>{{ item.nombre }}</span>
+              <small class="text-muted">
+                ${{ item.precioUnitario }} · Stock {{ item.stock }}
+              </small>
+            </div>
+          </ng-template>
+        </ng-select>
       </div>
 
-      <div class="col-3">
+      <!-- CANTIDAD -->
+      <div class="col-6 col-md-3">
+        <label class="form-label">Cantidad</label>
+        <input type="number" class="form-control" formControlName="cantidad" min="1" />
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="col-6 col-md-3">
+        <label class="form-label invisible">Agregar</label>
         <button type="button" class="btn btn-primary w-100" (click)="agregarProducto()">
           Agregar
         </button>
       </div>
+
     </div>
 
-    <!-- Detalle -->
+    <!-- DETALLE -->
     <table class="table table-sm mt-3" *ngIf="detalles.length">
       <thead>
         <tr>
           <th>Producto</th>
-          <th>Cant.</th>
-          <th>Precio</th>
-          <th>Subtotal</th>
+          <th class="text-center">Cant.</th>
+          <th class="text-end">Precio</th>
+          <th class="text-end">Subtotal</th>
           <th></th>
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let d of detalles.controls; let i = index">
           <td>{{ d.value.nombre }}</td>
-          <td>{{ d.value.cantidad }}</td>
-          <td>${{ d.value.precioUnitario }}</td>
-          <td>${{ d.value.cantidad * d.value.precioUnitario }}</td>
+          <td class="text-center">{{ d.value.cantidad }}</td>
+          <td class="text-end">${{ d.value.precioUnitario }}</td>
+          <td class="text-end">
+            ${{ d.value.cantidad * d.value.precioUnitario }}
+          </td>
           <td class="text-center">
-            <button class="btn btn-sm btn-danger" (click)="eliminarDetalle(i)">
+            <button type="button" class="btn btn-sm btn-danger" (click)="eliminarDetalle(i)">
               ×
             </button>
           </td>
@@ -66,18 +109,26 @@
       </tbody>
     </table>
 
-    <h5 class="text-end">Total: ${{ total }}</h5>
+    <!-- TOTALES -->
+    <div class="mt-3 text-end">
+      <h6>Total venta: ${{ total }}</h6>
 
-    <div class="d-flex justify-content-between mt-3">
-      <button class="btn btn-secondary" type="button" (click)="cerrar.emit()">
+      <h6 class="text-success" *ngIf="form.value.montoNotaUsado > 0">
+        Descuento nota: -${{ form.value.montoNotaUsado }}
+      </h6>
+
+      <h4>
+        Total a pagar: ${{ totalFinal }}
+      </h4>
+    </div>
+
+    <!-- ACCIONES -->
+    <div class="d-flex justify-content-between mt-4">
+      <button type="button" class="btn btn-secondary" (click)="cerrar.emit()">
         Cancelar
       </button>
-      <button
-        class="btn btn-success"
-        type="button"
-        [disabled]="!puedeGuardar"
-        (click)="guardarVenta()"
-      >
+
+      <button type="button" class="btn btn-success" [disabled]="!puedeGuardar" (click)="guardarVenta()">
         Guardar
       </button>
     </div>

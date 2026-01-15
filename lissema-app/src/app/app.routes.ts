@@ -42,4 +42,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/reportes/pages/listar-reportes/listar-reportes').then(c => c.ListarReportes)
   },
+  {
+    path: 'notas-credito',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/notas-credito/pages/listar-notas-credito/listar-notas-credito').then(c => c.ListarNotasCredito)
+  },
 ];

@@ -103,19 +103,33 @@
                     <th>Usuario</th>
                     <th>Total</th>
                     <th>Productos</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr *ngFor="let v of ventasFiltradas" [class.table-secondary]="v.estado === 'ANULADA'">
+                <tr *ngFor="let v of ventasFiltradas" [class.table-secondary]="v.estado === 'ANULADA'"
+                    [class.table-warning]="v.estado === 'PARCIALMENTE_ACREDITADA'" [class.table-info]="v.estado === 'ACREDITADA'">
                     <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
                     <td>{{ v.cliente?.nombreDueno || 'Consumidor Final' }}</td>
                     <td>{{ v.cliente?.zona || '-' }}</td>
                     <td>{{ v.usuario.nombre }}</td>
                     <td>${{ v.total | number:'1.0-0' }}</td>
                     <td>{{ v.detalles.length }}</td>
-                    <td>
+                    <td class="text-center">
+                        <span *ngIf="v.estado === 'ACTIVA'" class="badge bg-success">
+                            ACTIVA
+                        </span>
+
+                        <span *ngIf="v.estado === 'PARCIALMENTE_ACREDITADA'" class="badge bg-warning text-dark">
+                            PARCIAL
+                        </span>
+
+                        <span *ngIf="v.estado === 'ACREDITADA'" class="badge bg-info">
+                            ACREDITADA
+                        </span>
+
                         <span *ngIf="v.estado === 'ANULADA'" class="badge bg-danger">
                             ANULADA
                         </span>
@@ -126,8 +140,14 @@
                             [disabled]="v.estado === 'ANULADA'">
                             Factura
                         </button>
-                        <button class="btn btn-sm btn-danger" [disabled]="v.estado === 'ANULADA'" (click)="anular(v)">
+                        <button class="btn btn-sm btn-danger me-1" [disabled]="v.estado === 'ANULADA' || v.estado !== 'ACTIVA'"
+                            (click)="anular(v)">
                             Anular
+                        </button>
+                        <button class="btn btn-sm btn-warning"
+                            [disabled]="v.estado === 'ANULADA' || v.estado === 'ACREDITADA'"
+                            (click)="abrirNotaCredito(v)">
+                            Nota Crédito
                         </button>
                     </td>
                 </tr>
@@ -136,6 +156,8 @@
     </div>
     <app-ver-detalle *ngIf="mostrarDetalle" [venta]="ventaSeleccionada" (cerrar)="cerrarDetalle()">
     </app-ver-detalle>
-
+    <app-nota-credito *ngIf="mostrarNotaCredito && ventaSeleccionada" [venta]="ventaSeleccionada"
+        (cerrar)="cerrarNotaCredito()">
+    </app-nota-credito>
 </div>
 <br><br>
