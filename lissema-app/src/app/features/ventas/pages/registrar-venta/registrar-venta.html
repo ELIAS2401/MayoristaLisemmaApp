@@ -7,12 +7,23 @@
 
     <!-- CLIENTE -->
     <label class="form-label">Cliente</label>
-    <select class="form-select mb-3" formControlName="clienteId">
-      <option [ngValue]="null" disabled>Seleccione un cliente</option>
-      <option *ngFor="let c of (clientes$ | async)" [ngValue]="c.id">
-        {{ c.nombreDueno }}
-      </option>
-    </select>
+
+    <ng-select class="mb-3" [items]="(clientes$ | async) ?? []" bindLabel="nombreDueno" bindValue="id"
+      placeholder="Buscar cliente..." formControlName="clienteId" [searchable]="true" [clearable]="true"
+      appendTo=".modal-card">
+
+      <ng-template ng-option-tmp let-item="item">
+        <div class="d-flex flex-column">
+          <strong>{{ item.nombreDueno }}</strong>
+          <small class="text-muted" *ngIf="item.direccion">
+            {{ item.direccion }}
+          </small>
+        </div>
+      </ng-template>
+
+    </ng-select>
+
+
 
     <!-- NOTA DE CRÉDITO -->
     <div *ngIf="notasCredito.length" class="mb-3">
