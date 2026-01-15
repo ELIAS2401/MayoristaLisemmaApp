@@ -78,6 +78,14 @@ export class RegistrarVenta implements OnInit {
     this.productos$.subscribe(productos => {
       this.productosConStock = productos.filter(p => (p.stock ?? 0) > 0);
     });
+
+    this.form.get('productoId')!.valueChanges.subscribe(productoId => {
+      if (!productoId) return;
+
+      this.form.patchValue({
+        cantidad: 1
+      });
+    });
   }
 
 
@@ -188,14 +196,6 @@ export class RegistrarVenta implements OnInit {
   get totalFinal(): number {
     const usado = this.form.value.montoNotaUsado || 0;
     return Math.max(this.total - usado, 0);
-  }
-  onProductoSeleccionado(productoId: number) {
-    if (!productoId) return;
-
-    this.form.patchValue({
-      productoId,
-      cantidad: 1
-    });
   }
 
 }

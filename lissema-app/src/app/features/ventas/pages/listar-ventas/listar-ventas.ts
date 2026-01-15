@@ -244,10 +244,16 @@ export class ListarVentas implements OnInit {
     const doc = new jsPDF();
     let y = 20;
 
+    /* =========================
+       LOGO
+    ========================= */
     const img = new Image();
     img.src = 'assets/img/lisemma-logo.png';
     doc.addImage(img, 'PNG', 80, 5, 50, 20);
 
+    /* =========================
+       TÍTULO
+    ========================= */
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
     doc.text(`Factura - Venta #${venta.id}`, 14, y + 20);
@@ -257,6 +263,9 @@ export class ListarVentas implements OnInit {
 
     y += 35;
 
+    /* =========================
+       DATOS GENERALES
+    ========================= */
     doc.text(`Fecha: ${new Date(venta.fecha).toLocaleString()}`, 14, y);
     y += 5;
     doc.text(`Vendedor: ${venta.usuario.nombre}`, 14, y);
@@ -265,10 +274,13 @@ export class ListarVentas implements OnInit {
     y += 5;
     doc.text(`Zona: ${venta.cliente?.zona || '-'}`, 14, y);
     y += 5;
-    doc.text(`Dirección: ${venta.cliente?.direccion}`, 14, y);
+    doc.text(`Dirección: ${venta.cliente?.direccion || '-'}`, 14, y);
 
     y += 8;
 
+    /* =========================
+       TABLA DE PRODUCTOS
+    ========================= */
     autoTable(doc, {
       startY: y,
       head: [['Producto', 'Cant.', 'Precio Unit.', 'Subtotal']],
@@ -286,19 +298,95 @@ export class ListarVentas implements OnInit {
       }
     });
 
-    y = (doc as any).lastAutoTable.finalY + 6;
+    y = (doc as any).lastAutoTable.finalY + 8;
 
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
+    /* =========================
+       CÁLCULOS
+    ========================= */
+    const subtotal = venta.detalles.reduce(
+      (sum, d) => sum + Number(d.cantidad) * Number(d.precioUnitario),
+      0
+    );
+
+    const tieneNotaCredito = !!venta.notaCredito;
+
+    /* =========================
+       SUBTOTAL
+    ========================= */
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(11);
     doc.text(
-      `TOTAL: $${Number(venta.total).toLocaleString()}`,
+      `Subtotal: $${subtotal.toLocaleString()}`,
       196,
       y,
       { align: 'right' }
     );
 
+    y += 6;
+
+    /* =========================
+       NOTA DE CRÉDITO
+    ========================= */
+    if (tieneNotaCredito && venta.notaCredito) {
+      doc.setTextColor(0, 128, 0);
+
+      doc.text(
+        `Nota de Crédito #${venta.notaCredito.id}: -$${Number(venta.montoNotaUsado).toLocaleString()}`,
+        196,
+        y,
+        { align: 'right' }
+      );
+
+      y += 5;
+
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'italic');
+      doc.text(
+        `Estado de la Nota: ${venta.notaCredito.estado}`,
+        196,
+        y,
+        { align: 'right' }
+      );
+
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(0, 0, 0);
+
+      y += 6;
+    }
+
+    /* =========================
+       TOTAL FINAL
+    ========================= */
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.text(
+      `TOTAL A PAGAR: $${Number(venta.total).toLocaleString()}`,
+      196,
+      y,
+      { align: 'right' }
+    );
+
+    /* =========================
+       ACLARACIÓN
+    ========================= */
+    if (tieneNotaCredito) {
+      y += 8;
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'italic');
+      doc.text(
+        'El total refleja la aplicación de una Nota de Crédito.',
+        14,
+        y
+      );
+    }
+
+    /* =========================
+       GUARDAR PDF
+    ========================= */
     doc.save(`factura-venta-${venta.id}.pdf`);
   }
+
 
   abrirNotaCredito(venta: Venta) {
     this.ventaSeleccionada = venta;

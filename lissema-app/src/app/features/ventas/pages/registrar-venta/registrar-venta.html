@@ -44,7 +44,7 @@
         Se aplicará un descuento de hasta ${{ montoDisponibleNota }}
       </small>
     </div>
-    
+
     <!-- PRODUCTO -->
     <div class="row g-2 align-items-end mt-3">
 
@@ -52,7 +52,7 @@
         <label class="form-label">Producto</label>
 
         <ng-select [items]="productosConStock" bindLabel="nombre" bindValue="id" placeholder="Buscar producto..."
-          formControlName="productoId" [searchable]="true" [clearable]="true" appendTo="body" (change)="onProductoSeleccionado($event)">
+          formControlName="productoId" [searchable]="true" [clearable]="true" appendTo="body">
           <ng-template ng-option-tmp let-item="item">
             <div class="d-flex justify-content-between">
               <span>{{ item.nombre }}</span>
