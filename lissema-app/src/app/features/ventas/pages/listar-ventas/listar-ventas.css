@@ -1,0 +1,35 @@
+.acciones-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =========================
+   CLIENTE – TEXTO CONTROLADO
+========================= */
+.cliente-truncado {
+    display: inline-block;
+    max-width: 180px;
+    /* 🔑 ajustá si querés */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
+/* =========================
+   ACCIONES – RESPONSIVE REAL
+========================= */
+.acciones-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    /* 🔑 permite bajar en bloque */
+    gap: 6px;
+    max-width: 260px;
+    /* 🔑 evita que se descontrole */
+}
+
+.acciones-wrap .btn {
+    white-space: nowrap;
+    /* 🔑 evita botones partidos */
+}

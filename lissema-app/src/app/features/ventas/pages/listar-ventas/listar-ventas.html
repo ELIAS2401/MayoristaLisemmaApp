@@ -103,16 +103,22 @@
                     <th>Usuario</th>
                     <th>Total</th>
                     <th>Productos</th>
-                    <th>Estado</th>
+                    <th class="text-center">Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr *ngFor="let v of ventasFiltradas" [class.table-secondary]="v.estado === 'ANULADA'"
-                    [class.table-warning]="v.estado === 'PARCIALMENTE_ACREDITADA'" [class.table-info]="v.estado === 'ACREDITADA'">
+                    [class.table-warning]="v.estado === 'PARCIALMENTE_ACREDITADA'"
+                    [class.table-info]="v.estado === 'ACREDITADA'">
                     <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td>{{ v.cliente?.nombreDueno || 'Consumidor Final' }}</td>
+                    <td>
+                        <span class="cliente-truncado" [title]="v.cliente?.nombreDueno || 'Consumidor Final'">
+                            {{ v.cliente?.nombreDueno || 'Consumidor Final' }}
+                        </span>
+                    </td>
+
                     <td>{{ v.cliente?.zona || '-' }}</td>
                     <td>{{ v.usuario.nombre }}</td>
                     <td>${{ v.total | number:'1.0-0' }}</td>
@@ -135,21 +141,29 @@
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-primary me-1" (click)="verDetalle(v)">Ver</button>
-                        <button class="btn btn-sm btn-secondary me-1" (click)="descargarFactura(v)"
-                            [disabled]="v.estado === 'ANULADA'">
-                            Factura
-                        </button>
-                        <button class="btn btn-sm btn-danger me-1" [disabled]="v.estado === 'ANULADA' || v.estado !== 'ACTIVA'"
-                            (click)="anular(v)">
-                            Anular
-                        </button>
-                        <button class="btn btn-sm btn-warning"
-                            [disabled]="v.estado === 'ANULADA' || v.estado === 'ACREDITADA'"
-                            (click)="abrirNotaCredito(v)">
-                            Nota Crédito
-                        </button>
+                        <div class="acciones-wrap">
+                            <button class="btn btn-sm btn-primary" (click)="verDetalle(v)">
+                                Ver
+                            </button>
+
+                            <button class="btn btn-sm btn-secondary" [disabled]="v.estado === 'ANULADA'"
+                                (click)="descargarFactura(v)">
+                                Factura
+                            </button>
+
+                            <button class="btn btn-sm btn-danger"
+                                [disabled]="v.estado === 'ANULADA' || v.estado !== 'ACTIVA'" (click)="anular(v)">
+                                Anular
+                            </button>
+
+                            <button class="btn btn-sm btn-warning"
+                                [disabled]="v.estado === 'ANULADA' || v.estado === 'ACREDITADA'"
+                                (click)="abrirNotaCredito(v)">
+                                Nota Crédito
+                            </button>
+                        </div>
                     </td>
+
                 </tr>
             </tbody>
         </table>
