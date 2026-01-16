@@ -41,6 +41,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/MayoristaLisemmaApp/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
