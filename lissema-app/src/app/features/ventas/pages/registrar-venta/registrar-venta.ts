@@ -198,4 +198,8 @@ export class RegistrarVenta implements OnInit {
     return Math.max(this.total - usado, 0);
   }
 
+  asFormGroup(control: any): FormGroup {
+    return control as FormGroup;
+  }
+
 }

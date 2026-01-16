@@ -104,10 +104,14 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let d of detalles.controls; let i = index">
+        <tr *ngFor="let d of detalles.controls; let i = index" [formGroup]="asFormGroup(d)">
+mysql://root:LTaurkNgQsGbtgJYGdgcGilVbSoTioUO@caboose.proxy.rlwy.net:23234/railway
           <td>{{ d.value.nombre }}</td>
           <td class="text-center">{{ d.value.cantidad }}</td>
-          <td class="text-end">${{ d.value.precioUnitario }}</td>
+          <td class="text-end">
+            <input type="number" class="form-control form-control-sm text-end" formControlName="precioUnitario"
+              min="0" />
+          </td>
           <td class="text-end">
             ${{ d.value.cantidad * d.value.precioUnitario }}
           </td>
