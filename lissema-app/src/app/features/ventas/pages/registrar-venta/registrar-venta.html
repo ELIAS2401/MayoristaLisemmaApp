@@ -105,7 +105,6 @@
 
       <tbody>
         <tr *ngFor="let d of detalles.controls; let i = index" [formGroup]="asFormGroup(d)">
-mysql://root:LTaurkNgQsGbtgJYGdgcGilVbSoTioUO@caboose.proxy.rlwy.net:23234/railway
           <td>{{ d.value.nombre }}</td>
           <td class="text-center">{{ d.value.cantidad }}</td>
           <td class="text-end">
