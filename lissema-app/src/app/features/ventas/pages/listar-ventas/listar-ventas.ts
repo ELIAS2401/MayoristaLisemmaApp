@@ -49,6 +49,9 @@ export class ListarVentas implements OnInit {
   totalProductosZona = 0;
 
   mostrarNotaCredito = false;
+  // 🔹 PAGINACIÓN
+  paginaActual = 1;
+  ventasPorPagina = 10;
 
   ngOnInit() {
     this.ventas$.subscribe(v => {
@@ -126,6 +129,7 @@ export class ListarVentas implements OnInit {
     if (this.mostrarResumenZona) {
       this.calcularResumenZona();
     }
+    this.paginaActual = 1;
   }
 
   calcularTotalVentas() {
@@ -147,6 +151,7 @@ export class ListarVentas implements OnInit {
 
     this.ventasFiltradas = [...this.ventasOriginal];
     this.calcularTotalVentas();
+    this.paginaActual = 1;
   }
 
   descargarResumenPDF() {
@@ -397,6 +402,14 @@ export class ListarVentas implements OnInit {
     this.mostrarNotaCredito = false;
     this.ventaSeleccionada = undefined;
   }
+  get ventasPaginadas(): Venta[] {
+    const inicio = (this.paginaActual - 1) * this.ventasPorPagina;
+    const fin = inicio + this.ventasPorPagina;
+    return this.ventasFiltradas.slice(inicio, fin);
+  }
 
+  get totalPaginas(): number {
+    return Math.ceil(this.ventasFiltradas.length / this.ventasPorPagina);
+  }
 }
 

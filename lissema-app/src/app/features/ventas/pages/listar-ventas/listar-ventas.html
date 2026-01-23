@@ -109,7 +109,7 @@
             </thead>
 
             <tbody>
-                <tr *ngFor="let v of ventasFiltradas" [class.table-secondary]="v.estado === 'ANULADA'"
+                <tr *ngFor="let v of ventasPaginadas" [class.table-secondary]="v.estado === 'ANULADA'"
                     [class.table-warning]="v.estado === 'PARCIALMENTE_ACREDITADA'"
                     [class.table-info]="v.estado === 'ACREDITADA'">
                     <td>{{ v.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
@@ -167,6 +167,35 @@
                 </tr>
             </tbody>
         </table>
+        <nav *ngIf="totalPaginas > 1" class="mt-3">
+            <ul class="pagination justify-content-center">
+
+                <!-- Anterior -->
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                    <button class="page-link" (click)="paginaActual = paginaActual - 1" [disabled]="paginaActual === 1">
+                        Anterior
+                    </button>
+                </li>
+
+                <!-- Páginas -->
+                <li class="page-item" *ngFor="let p of [].constructor(totalPaginas); let i = index"
+                    [class.active]="paginaActual === i + 1">
+                    <button class="page-link" (click)="paginaActual = i + 1">
+                        {{ i + 1 }}
+                    </button>
+                </li>
+
+                <!-- Siguiente -->
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                    <button class="page-link" (click)="paginaActual = paginaActual + 1"
+                        [disabled]="paginaActual === totalPaginas">
+                        Siguiente
+                    </button>
+                </li>
+
+            </ul>
+        </nav>
+
     </div>
     <app-ver-detalle *ngIf="mostrarDetalle" [venta]="ventaSeleccionada" (cerrar)="cerrarDetalle()">
     </app-ver-detalle>
