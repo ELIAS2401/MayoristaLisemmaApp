@@ -51,7 +51,7 @@ export class ListarVentas implements OnInit {
   mostrarNotaCredito = false;
   // 🔹 PAGINACIÓN
   paginaActual = 1;
-  ventasPorPagina = 10;
+  ventasPorPagina = 20;
 
   ngOnInit() {
     this.ventas$.subscribe(v => {
