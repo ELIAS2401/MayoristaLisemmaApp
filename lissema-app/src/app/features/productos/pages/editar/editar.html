@@ -7,23 +7,69 @@
   <form (ngSubmit)="guardar()">
 
     <label class="form-label">Nombre</label>
-    <input type="text" class="form-control mb-2" [(ngModel)]="nombre" name="nombre" required>
+    <input
+      type="text"
+      class="form-control mb-2"
+      [(ngModel)]="nombre"
+      name="nombre"
+      required
+    >
 
-    <label class="form-label">CategoríaId</label>
-    <input type="number" class="form-control mb-2" [(ngModel)]="categoriaId" name="categoria">
+    <label class="form-label">Categoría ID</label>
+    <input
+      type="number"
+      class="form-control mb-2"
+      [(ngModel)]="categoriaId"
+      name="categoriaId"
+    >
 
     <label class="form-label">Costo unitario</label>
-    <input type="number" class="form-control mb-2" [(ngModel)]="costoUnitario" name="costo" required>
+    <input
+      type="number"
+      class="form-control mb-2"
+      [(ngModel)]="costoUnitario"
+      name="costoUnitario"
+      required
+    >
 
     <label class="form-label">Precio unitario</label>
-    <input type="number" class="form-control mb-2" [(ngModel)]="precioUnitario" name="precio" required>
+    <input
+      type="number"
+      class="form-control mb-2"
+      [(ngModel)]="precioUnitario"
+      name="precioUnitario"
+      required
+    >
 
-    <label class="form-label">Stock</label>
-    <input type="number" class="form-control mb-3" [(ngModel)]="stock" name="stock">
+    <!-- STOCK ACTUAL (SOLO LECTURA) -->
+    <label class="form-label">Stock actual</label>
+    <input
+      type="number"
+      class="form-control mb-3"
+      [value]="stockActual"
+      disabled
+    >
+
+    <hr>
+
+    <!-- REPOSICIÓN -->
+    <label class="form-label">Reponer stock (sumar)</label>
+    <input
+      type="number"
+      class="form-control mb-3"
+      [(ngModel)]="stockAReponer"
+      name="stockAReponer"
+      min="1"
+      placeholder="Ej: 50"
+    >
 
     <div class="d-flex justify-content-between mt-3">
-      <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" (click)="guardar()">Guardar cambios</button>
+      <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary">
+        Guardar cambios
+      </button>
     </div>
 
   </form>

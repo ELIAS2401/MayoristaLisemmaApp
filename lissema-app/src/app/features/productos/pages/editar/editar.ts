@@ -19,24 +19,14 @@ export class Editar {
 
   private productoService = inject(ProductoService);
   private cdr = inject(ChangeDetectorRef);
-  // Campos editables
+
   nombre = '';
   categoriaId: number | null = null;
   costoUnitario: number | null = null;
   precioUnitario: number | null = null;
-  stock: number | null = null;
 
-  // ngOnInit() {
-  //   this.productoService.getProducto(this.productoId).subscribe({
-  //     next: (p) => {
-  //       this.nombre = p.nombre;
-  //       this.categoria = p.categoria?.nombre || '';
-  //       this.costoUnitario = p.costoUnitario;
-  //       this.precioUnitario = p.precioUnitario;
-  //       this.stock = p.stock ?? 0;
-  //     }
-  //   });
-  // }
+  stockActual = 0;
+  stockAReponer: number | null = null;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['productoId'] && this.productoId) {
@@ -51,20 +41,24 @@ export class Editar {
         this.categoriaId = p.categoriaId ?? null;
         this.costoUnitario = p.costoUnitario;
         this.precioUnitario = p.precioUnitario;
-        this.stock = p.stock ?? 0;
+        this.stockActual = p.stock ?? 0;
+        this.stockAReponer = null;
         this.cdr.detectChanges();
       }
     });
   }
 
   guardar() {
-    const cambios = {
+    const cambios: any = {
       nombre: this.nombre,
       categoriaId: this.categoriaId ? Number(this.categoriaId) : null,
       costoUnitario: this.costoUnitario,
       precioUnitario: this.precioUnitario,
-      stock: this.stock
     };
+
+    if (this.stockAReponer && this.stockAReponer > 0) {
+      cambios.stockAReponer = Number(this.stockAReponer);
+    }
 
     this.productoService.updateProducto(this.productoId, cambios).subscribe({
       next: () => {
@@ -79,3 +73,4 @@ export class Editar {
     this.cerrar.emit();
   }
 }
+
