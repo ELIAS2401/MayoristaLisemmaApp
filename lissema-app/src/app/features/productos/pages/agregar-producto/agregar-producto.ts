@@ -21,8 +21,12 @@ export class AgregarProducto {
   costoUnitario: number | null = null;
   precioUnitario: number | null = null;
   stock: number | null = null;
+  guardando = false;
 
   guardar() {
+
+    if (this.guardando) return; // 🚫 evita doble envío
+    this.guardando = true;
 
     const nuevoProducto = {
       nombre: this.nombre,
@@ -36,11 +40,14 @@ export class AgregarProducto {
       next: () => {
         this.productoService.cargarProductos();
         this.cerrar.emit();
+        this.guardando = false;
       },
-      error: err => console.error('Error al agregar:', err)
+      error: err => {
+        console.error('Error al agregar:', err);
+        this.guardando = false;
+      }
     });
   }
-
   cerrarModal() {
     this.cerrar.emit();
   }
