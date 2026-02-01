@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://mayoristalisemmaback-production.up.railway.app'
+  apiUrl: 'https://apilisemma-production.up.railway.app'
 };
