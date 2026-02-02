@@ -150,4 +150,21 @@ export class Productos implements OnInit {
       p.nombre?.toLowerCase().includes(texto)
     );
   }
+
+  activarProducto(id: number) {
+    if (!confirm('¿Desea activar este producto? El stock comenzará en 0.')) {
+      return;
+    }
+
+    this.productoService.updateProducto(id, {
+      activo: true,
+      stock: 0
+    }).subscribe({
+      next: () => {
+        this.productoService.cargarProductos();
+      },
+      error: err => console.error('Error al activar producto:', err)
+    });
+  }
+
 }

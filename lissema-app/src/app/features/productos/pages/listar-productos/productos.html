@@ -88,9 +88,10 @@
                                     ×
                                 </button>
 
-                                <span *ngIf="p.activo === false" class="badge bg-secondary">
-                                    Inactivo
-                                </span>
+                                <button *ngIf="p.activo === false" class="btn btn-success btn-sm"
+                                    (click)="activarProducto(p.id!)">
+                                    Activar
+                                </button>
                             </td>
 
                         </tr>
