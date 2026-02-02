@@ -65,3 +65,4 @@ cd C:\dev\MayoristaLisemmaApp\lissema-app
 ng build --configuration production --base-href /MayoristaLisemmaApp/
 cd ..
 npx gh-pages -d lissema-app/dist/lissema-app/browser --no-history
+comment
