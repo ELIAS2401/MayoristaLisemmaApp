@@ -7,61 +7,19 @@
   <form (ngSubmit)="guardar()">
 
     <label class="form-label">Nombre</label>
-    <input
-      type="text"
-      class="form-control mb-2"
-      [(ngModel)]="nombre"
-      name="nombre"
-      required
-    >
+    <input type="text" class="form-control mb-2" [(ngModel)]="nombre" name="nombre" required>
 
     <label class="form-label">Categoría ID</label>
-    <input
-      type="number"
-      class="form-control mb-2"
-      [(ngModel)]="categoriaId"
-      name="categoriaId"
-    >
+    <input type="number" class="form-control mb-2" [(ngModel)]="categoriaId" name="categoriaId">
 
     <label class="form-label">Costo unitario</label>
-    <input
-      type="number"
-      class="form-control mb-2"
-      [(ngModel)]="costoUnitario"
-      name="costoUnitario"
-      required
-    >
+    <input type="number" class="form-control mb-2" [(ngModel)]="costoUnitario" name="costoUnitario" required>
 
     <label class="form-label">Precio unitario</label>
-    <input
-      type="number"
-      class="form-control mb-2"
-      [(ngModel)]="precioUnitario"
-      name="precioUnitario"
-      required
-    >
+    <input type="number" class="form-control mb-2" [(ngModel)]="precioUnitario" name="precioUnitario" required>
 
-    <!-- STOCK ACTUAL (SOLO LECTURA) -->
-    <label class="form-label">Stock actual</label>
-    <input
-      type="number"
-      class="form-control mb-3"
-      [value]="stockActual"
-      disabled
-    >
-
-    <hr>
-
-    <!-- REPOSICIÓN -->
-    <label class="form-label">Reponer stock (sumar)</label>
-    <input
-      type="number"
-      class="form-control mb-3"
-      [(ngModel)]="stockAReponer"
-      name="stockAReponer"
-      min="1"
-      placeholder="Ej: 50"
-    >
+    <label class="form-label">Stock</label>
+    <input type="number" class="form-control mb-3" [(ngModel)]="stock" name="stock" min="0" required>
 
     <div class="d-flex justify-content-between mt-3">
       <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
