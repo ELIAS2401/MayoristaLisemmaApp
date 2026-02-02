@@ -27,7 +27,12 @@ export class ProductoService {
           stock: Number(item.stock ?? 0)
         }));
 
-        this.productosSubject.next(productosConvertidos); // EMITE Y ACTUALIZA
+        const productosOrdenados = productosConvertidos.sort((a, b) => {
+          // activos primero, inactivos al final
+          return Number(b.activo !== false) - Number(a.activo !== false);
+        });
+
+        this.productosSubject.next(productosOrdenados); // EMITE Y ACTUALIZA
       },
       error: (err) => console.error('Error al obtener productos:', err)
     });
