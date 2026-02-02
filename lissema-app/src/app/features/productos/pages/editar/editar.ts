@@ -26,7 +26,7 @@ export class Editar {
   precioUnitario: number | null = null;
 
   stock: number | null = null;
-
+  stockOriginal: number = 0;
   ngOnChanges(changes: SimpleChanges) {
     if (changes['productoId'] && this.productoId) {
       this.cargarProducto();
@@ -41,20 +41,22 @@ export class Editar {
         this.costoUnitario = p.costoUnitario;
         this.precioUnitario = p.precioUnitario;
         this.stock = p.stock ?? 0;
+        this.stockOriginal = this.stock;
         this.cdr.detectChanges();
       }
     });
   }
 
   guardar() {
-    const cambios = {
+    const cambios: any = {
       nombre: this.nombre,
       categoriaId: this.categoriaId ? Number(this.categoriaId) : null,
       costoUnitario: Number(this.costoUnitario ?? 0),
       precioUnitario: Number(this.precioUnitario ?? 0),
-      stock: Number(this.stock ?? 0)
     };
-
+    if (this.stock !== null && this.stock !== this.stockOriginal) {
+      cambios.stock = Number(this.stock);
+    }
     this.productoService.updateProducto(this.productoId, cambios).subscribe({
       next: () => {
         this.productoService.cargarProductos();
