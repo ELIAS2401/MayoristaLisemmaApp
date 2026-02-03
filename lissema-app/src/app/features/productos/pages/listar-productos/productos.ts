@@ -40,19 +40,20 @@ export class Productos implements OnInit {
 
     // 1) Primero te suscribís al observable
     this.productos$.subscribe(prods => {
+
       const activos = prods.filter(p => p.activo !== false);
 
-      // Listas SOLO de activos
-      this.productosOriginal = [...activos];
-      this.productosFiltradosList = [...activos];
+      // 👁️ LISTAS: TODOS (para ver y reactivar)
+      this.productosOriginal = [...prods];
+      this.productosFiltradosList = [...prods];
 
-      // Totales SOLO de activos
+      // 💰 TOTALES: SOLO ACTIVOS
       this.totalCosto = activos.reduce(
-        (sum, item) => sum + (item.costoUnitario * (item.stock ?? 0)), 0
+        (sum, item) => sum + item.costoUnitario * (item.stock ?? 0), 0
       );
 
       this.totalPrecio = activos.reduce(
-        (sum, item) => sum + (item.precioUnitario * (item.stock ?? 0)), 0
+        (sum, item) => sum + item.precioUnitario * (item.stock ?? 0), 0
       );
 
       this.cdr.markForCheck();
