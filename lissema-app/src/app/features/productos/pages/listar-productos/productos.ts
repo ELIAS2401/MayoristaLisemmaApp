@@ -91,7 +91,7 @@ export class Productos implements OnInit {
   }
 
   descargarPDF() {
-    const productos = this.productosFiltradosList; // 👈 CLAVE
+    const productos = this.productosFiltradosList.filter(p => p.activo !== false); // 👈 CLAVE
 
     const doc = new jsPDF();
 
