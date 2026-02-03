@@ -40,21 +40,21 @@ export class Productos implements OnInit {
 
     // 1) Primero te suscribís al observable
     this.productos$.subscribe(prods => {
-      console.log("PRODS:", prods);
       const activos = prods.filter(p => p.activo !== false);
 
-      this.productosOriginal = [...prods];
-      this.productosFiltradosList = [...prods];
+      // Listas SOLO de activos
+      this.productosOriginal = [...activos];
+      this.productosFiltradosList = [...activos];
 
-      this.totalCosto = prods.reduce(
+      // Totales SOLO de activos
+      this.totalCosto = activos.reduce(
         (sum, item) => sum + (item.costoUnitario * (item.stock ?? 0)), 0
       );
 
-      this.totalPrecio = prods.reduce(
+      this.totalPrecio = activos.reduce(
         (sum, item) => sum + (item.precioUnitario * (item.stock ?? 0)), 0
       );
 
-      // ESTO ES LO QUE LE FALTABA A TU COMPONENTE
       this.cdr.markForCheck();
     });
 
