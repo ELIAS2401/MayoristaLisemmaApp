@@ -178,10 +178,9 @@
                 </li>
 
                 <!-- Páginas -->
-                <li class="page-item" *ngFor="let p of [].constructor(totalPaginas); let i = index"
-                    [class.active]="paginaActual === i + 1">
-                    <button class="page-link" (click)="paginaActual = i + 1">
-                        {{ i + 1 }}
+                <li class="page-item" *ngFor="let p of paginasVisibles" [class.active]="paginaActual === p">
+                    <button class="page-link" (click)="paginaActual = p">
+                        {{ p }}
                     </button>
                 </li>
 

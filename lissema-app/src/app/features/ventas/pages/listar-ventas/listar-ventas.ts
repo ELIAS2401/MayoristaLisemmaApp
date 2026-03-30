@@ -411,5 +411,20 @@ export class ListarVentas implements OnInit {
   get totalPaginas(): number {
     return Math.ceil(this.ventasFiltradas.length / this.ventasPorPagina);
   }
+  get paginasVisibles(): number[] {
+    const total = this.totalPaginas;
+    const actual = this.paginaActual;
+    const rango = 2; // cuántas a cada lado
+
+    let inicio = Math.max(1, actual - rango);
+    let fin = Math.min(total, actual + rango);
+
+    const paginas = [];
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
+  }
 }
 
