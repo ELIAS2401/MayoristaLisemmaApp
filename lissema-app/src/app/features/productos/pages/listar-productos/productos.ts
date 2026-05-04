@@ -35,6 +35,7 @@ export class Productos implements OnInit {
   productoSeleccionadoId: number | null = null;
 
   hoy = new Date();
+  verInactivos: boolean = false;
 
   ngOnInit() {
 
@@ -45,7 +46,8 @@ export class Productos implements OnInit {
 
       // 👁️ LISTAS: TODOS (para ver y reactivar)
       this.productosOriginal = [...prods];
-      this.productosFiltradosList = [...prods];
+
+      this.aplicarFiltroActivos();
 
       // 💰 TOTALES: SOLO ACTIVOS
       this.totalCosto = activos.reduce(
@@ -61,6 +63,19 @@ export class Productos implements OnInit {
 
     // 2) Y recién después pedís los productos
     this.productoService.cargarProductos();
+  }
+
+  aplicarFiltroActivos() {
+    if (this.verInactivos) {
+      this.productosFiltradosList = [...this.productosOriginal];
+    } else {
+      this.productosFiltradosList = this.productosOriginal.filter(p => p.activo !== false);
+    }
+  }
+
+  toggleInactivos() {
+    this.verInactivos = !this.verInactivos;
+    this.aplicarFiltroActivos();
   }
 
   eliminar(id: number) {
@@ -142,12 +157,16 @@ export class Productos implements OnInit {
   actualizarFiltro() {
     const texto = this.busqueda.trim().toLowerCase();
 
+    let lista = this.verInactivos
+      ? [...this.productosOriginal]
+      : this.productosOriginal.filter(p => p.activo !== false);
+
     if (!texto) {
-      this.productosFiltradosList = [...this.productosOriginal];
+      this.productosFiltradosList = lista;
       return;
     }
 
-    this.productosFiltradosList = this.productosOriginal.filter(p =>
+    this.productosFiltradosList = lista.filter(p =>
       p.nombre?.toLowerCase().includes(texto)
     );
   }

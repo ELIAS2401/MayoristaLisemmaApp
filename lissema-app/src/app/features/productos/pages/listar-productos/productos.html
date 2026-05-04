@@ -41,7 +41,13 @@
     <div class="card shadow">
         <div class="card-body">
 
-            <h4 class="mb-3">Listado de productos</h4>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0">Listado de productos</h4>
+
+                <button class="btn btn-outline-secondary btn-sm" (click)="toggleInactivos()">
+                    {{ verInactivos ? 'Ocultar inactivos' : 'Ver inactivos' }}
+                </button>
+            </div>
 
             <!-- BUSCADOR -->
             <div class="mb-3">
