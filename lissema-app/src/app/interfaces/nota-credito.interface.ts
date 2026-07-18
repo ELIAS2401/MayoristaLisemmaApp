@@ -8,8 +8,7 @@ export interface NotaCredito {
   fecha: string;
 
   total: number;
-  montoUsado: number;
-  estado: 'DISPONIBLE' | 'PARCIAL' | 'USADA' | 'ANULADA';
+  estado: string;
 
   clienteId: number;
   cliente?: Cliente;

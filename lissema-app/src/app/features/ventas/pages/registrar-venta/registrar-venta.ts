@@ -13,8 +13,6 @@ import { take } from 'rxjs/operators';
 import { VentaService } from '../../services/venta-service';
 import { ProductoService } from '../../../productos/services/producto-service';
 import { ClienteService } from '../../../clientes/services/cliente.service';
-import { NotaCreditoService } from '../../../notas-credito/services/nota-credito-service';
-import { NotaCredito } from '../../../../interfaces/nota-credito.interface';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 
@@ -33,8 +31,7 @@ export class RegistrarVenta implements OnInit {
   private ventaService = inject(VentaService);
   private productoService = inject(ProductoService);
   private clienteService = inject(ClienteService);
-  private notaCreditoService = inject(NotaCreditoService);
-  notasCredito: NotaCredito[] = [];
+
 
   productos$ = this.productoService.productos$;
   clientes$ = this.clienteService.clientes$;
@@ -45,35 +42,6 @@ export class RegistrarVenta implements OnInit {
     this.crearForm();
     this.productoService.cargarProductos();
     this.clienteService.cargarClientes();
-
-    // 👇 cargás notas una sola vez
-    this.notaCreditoService.cargarNotas();
-
-    // 👇 reaccionás al cambio de cliente
-    this.form.get('clienteId')!.valueChanges.subscribe(clienteId => {
-      this.form.patchValue({ notaCreditoId: null });
-
-      if (!clienteId) {
-        this.notasCredito = [];
-        return;
-      }
-
-      const clienteIdNum = Number(clienteId);
-
-      this.notasCredito = this.notaCreditoService
-        .getNotasSnapshot()
-        .filter(n =>
-          n.clienteId === clienteIdNum &&
-          (n.estado === 'DISPONIBLE' || n.estado === 'PARCIAL')
-        );
-    });
-
-    this.form.get('montoNotaUsado')!.valueChanges.subscribe(monto => {
-      const max = Math.min(this.total, this.montoDisponibleNota);
-      if (monto > max) {
-        this.form.patchValue({ montoNotaUsado: max }, { emitEvent: false });
-      }
-    });
 
     this.productos$.subscribe(productos => {
       this.productosConStock = productos.filter(p => (p.stock ?? 0) > 0);
@@ -94,8 +62,6 @@ export class RegistrarVenta implements OnInit {
       clienteId: [null, Validators.required],
       productoId: [null],
       cantidad: [1, [Validators.required, Validators.min(1)]],
-      notaCreditoId: [null],
-      montoNotaUsado: [0, [Validators.min(0)]],
       detalles: this.fb.array([])
     });
   }
@@ -165,9 +131,7 @@ export class RegistrarVenta implements OnInit {
 
     const venta = {
       clienteId: this.form.value.clienteId,
-      total: this.totalFinal,
-      notaCreditoId: this.form.value.notaCreditoId,
-      montoNotaUsado: this.form.value.montoNotaUsado || 0,
+      total: this.total,
       detalles: this.detalles.value.map((d: any) => ({
         productoId: d.productoId,
         cantidad: d.cantidad,
@@ -185,17 +149,6 @@ export class RegistrarVenta implements OnInit {
         alert(err.error?.message || 'Error al registrar la venta');
       }
     });
-  }
-  get montoDisponibleNota(): number {
-    const id = this.form.value.notaCreditoId;
-    const nota = this.notasCredito.find(n => n.id === id);
-    if (!nota) return 0;
-
-    return nota.total - nota.montoUsado;
-  }
-  get totalFinal(): number {
-    const usado = this.form.value.montoNotaUsado || 0;
-    return Math.max(this.total - usado, 0);
   }
 
   asFormGroup(control: any): FormGroup {

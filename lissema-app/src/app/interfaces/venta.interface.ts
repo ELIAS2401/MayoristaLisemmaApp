@@ -13,6 +13,5 @@ export interface Venta {
   total: number;
   detalles: DetalleVenta[];
 
-  notaCredito?: NotaCredito | null;
-  montoNotaUsado?: number | null;
+  notasCredito?: NotaCredito[];
 }

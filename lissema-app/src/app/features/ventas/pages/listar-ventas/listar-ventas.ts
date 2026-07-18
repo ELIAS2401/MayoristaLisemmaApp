@@ -132,10 +132,16 @@ export class ListarVentas implements OnInit {
     this.paginaActual = 1;
   }
 
+  calcularTotalVentaReal(venta: Venta): number {
+    const totalNC = (venta.notasCredito ?? [])
+      .reduce((sum, nc) => sum + Number(nc.total), 0);
+    return Number(venta.total) - totalNC;
+  }
+
   calcularTotalVentas() {
     this.totalVentas = this.ventasFiltradas
-      .filter(v => v.estado !== 'ANULADA') // opcional pero recomendado
-      .reduce((sum, v) => sum + Number(v.total), 0);
+      .filter(v => v.estado !== 'ANULADA')
+      .reduce((sum, v) => sum + this.calcularTotalVentaReal(v), 0);
   }
 
   filtrarHoy() {
@@ -313,7 +319,7 @@ export class ListarVentas implements OnInit {
       0
     );
 
-    const tieneNotaCredito = !!venta.notaCredito;
+    const tieneNotaCredito = !!venta.notasCredito?.length;
 
     /* =========================
        SUBTOTAL
@@ -332,11 +338,12 @@ export class ListarVentas implements OnInit {
     /* =========================
        NOTA DE CRÉDITO
     ========================= */
-    if (tieneNotaCredito && venta.notaCredito) {
+    if (tieneNotaCredito) {
+      const nc = venta.notasCredito![0];
       doc.setTextColor(0, 128, 0);
 
       doc.text(
-        `Nota de Crédito #${venta.notaCredito.id}: -$${Number(venta.montoNotaUsado).toLocaleString()}`,
+        `Nota de Crédito #${nc.id}: -$${Number(nc.total).toLocaleString()}`,
         196,
         y,
         { align: 'right' }
@@ -347,7 +354,7 @@ export class ListarVentas implements OnInit {
       doc.setFontSize(9);
       doc.setFont('helvetica', 'italic');
       doc.text(
-        `Estado de la Nota: ${venta.notaCredito.estado}`,
+        `Estado de la Nota: ${nc.estado}`,
         196,
         y,
         { align: 'right' }
@@ -366,7 +373,7 @@ export class ListarVentas implements OnInit {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(13);
     doc.text(
-      `TOTAL A PAGAR: $${Number(venta.total).toLocaleString()}`,
+      `TOTAL A PAGAR: $${this.calcularTotalVentaReal(venta).toLocaleString()}`,
       196,
       y,
       { align: 'right' }

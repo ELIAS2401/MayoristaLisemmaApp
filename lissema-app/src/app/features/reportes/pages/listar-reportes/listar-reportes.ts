@@ -113,23 +113,52 @@ export class ListarReportes implements OnInit {
     this.calcularTopClientes();
   }
 
+  calcularTotalVentaReal(venta: Venta): number {
+    const totalNC = (venta.notasCredito ?? [])
+      .reduce((sum, nc) => sum + Number(nc.total), 0);
+    return Number(venta.total) - totalNC;
+  }
+
   calcularKPIs() {
+
     this.totalVendido = this.ventasFiltradas
-      .reduce((sum, v) => sum + Number(v.total), 0);
+      .reduce((sum, v) => sum + this.calcularTotalVentaReal(v), 0);
+
 
     this.cantidadVentas = this.ventasFiltradas.length;
+
 
     this.ticketPromedio = this.cantidadVentas
       ? this.totalVendido / this.cantidadVentas
       : 0;
 
-    // NUEVO: calcular ganancia total
+
     this.gananciaTotal = this.ventasFiltradas.reduce((sum, venta) => {
+
       const gananciaVenta = venta.detalles.reduce((sumaItem, detalle) => {
-        // Precio unitario menos costo unitario multiplicado por cantidad
-        return sumaItem + (detalle.precioUnitario - Number(detalle.producto.costoUnitario)) * detalle.cantidad;
+
+        const costo = Number(detalle.producto.costoUnitario);
+
+        const cantidadVendidaReal =
+          detalle.cantidad - (detalle.cantidadAcreditada ?? 0);
+
+        return sumaItem +
+          (Number(detalle.precioUnitario) - costo)
+          * cantidadVendidaReal;
+
       }, 0);
-      return sum + gananciaVenta;
+
+      const gananciaDevuelta = (venta.notasCredito ?? [])
+        .reduce((sumaNC, nc) => {
+          return sumaNC + (nc.detalles ?? []).reduce((sumaItem, det) => {
+            const costo = Number(det.ventaDetalle.producto.costoUnitario);
+            return sumaItem +
+              (Number(det.precioUnitario) - costo) * det.cantidad;
+          }, 0);
+        }, 0);
+
+      return sum + gananciaVenta - gananciaDevuelta;
+
     }, 0);
   }
 
@@ -138,7 +167,7 @@ export class ListarReportes implements OnInit {
 
     this.ventasFiltradas.forEach(v => {
       const zona = v.cliente?.zona || 'Sin zona';
-      map.set(zona, (map.get(zona) || 0) + Number(v.total));
+      map.set(zona, (map.get(zona) || 0) + this.calcularTotalVentaReal(v));
     });
 
     this.ventasPorZona = Array.from(map.entries()).map(([zona, total]) => ({
@@ -152,7 +181,7 @@ export class ListarReportes implements OnInit {
 
     this.ventasFiltradas.forEach(v => {
       const cliente = v.cliente?.nombreDueno || 'Consumidor Final';
-      map.set(cliente, (map.get(cliente) || 0) + Number(v.total));
+      map.set(cliente, (map.get(cliente) || 0) + this.calcularTotalVentaReal(v));
     });
 
     this.topClientes = Array.from(map.entries())

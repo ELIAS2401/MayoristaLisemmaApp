@@ -43,21 +43,15 @@
       </div>
 
       <!-- NOTA DE CRÉDITO -->
-      <div *ngIf="venta.notaCredito" class="nota-box">
+      <div *ngIf="venta.notasCredito?.length" class="nota-box">
         <h6 class="text-success">Nota de Crédito aplicada</h6>
 
-        <p><b>ID:</b> #{{ venta.notaCredito.id }}</p>
-        <p><b>Monto usado:</b> ${{ venta.montoNotaUsado }}</p>
-        <p>
-          <b>Estado:</b>
-          <span class="badge bg-success" *ngIf="venta.notaCredito.estado === 'USADA'">USADA</span>
-          <span class="badge bg-warning text-dark" *ngIf="venta.notaCredito.estado === 'PARCIAL'">PARCIAL</span>
-          <span class="badge bg-secondary" *ngIf="venta.notaCredito.estado === 'DISPONIBLE'">DISPONIBLE</span>
-        </p>
+        <p><b>ID:</b> #{{ venta.notasCredito?.[0]?.id }}</p>
+        <p><b>Total devuelto:</b> ${{ calcularTotalNC(venta) }}</p>
       </div>
 
       <h5 class="text-end mt-3">
-        Total: ${{ venta.total }}
+        Total: ${{ calcularTotalVentaReal(venta) }}
       </h5>
 
     </div>

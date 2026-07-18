@@ -11,4 +11,13 @@ import { CommonModule } from '@angular/common';
 export class VerDetalle {
   @Input() venta?: Venta;
   @Output() cerrar = new EventEmitter<void>();
+
+  calcularTotalVentaReal(venta: Venta): number {
+    return Number(venta.total) - this.calcularTotalNC(venta);
+  }
+
+  calcularTotalNC(venta: Venta): number {
+    return (venta.notasCredito ?? [])
+      .reduce((sum, nc) => sum + Number(nc.total), 0);
+  }
 }

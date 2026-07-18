@@ -121,7 +121,7 @@
 
                     <td>{{ v.cliente?.zona || '-' }}</td>
                     <td>{{ v.usuario.nombre }}</td>
-                    <td>${{ v.total | number:'1.0-0' }}</td>
+                    <td>${{ calcularTotalVentaReal(v) | number:'1.0-0' }}</td>
                     <td>{{ v.detalles.length }}</td>
                     <td class="text-center">
                         <span *ngIf="v.estado === 'ACTIVA'" class="badge bg-success">

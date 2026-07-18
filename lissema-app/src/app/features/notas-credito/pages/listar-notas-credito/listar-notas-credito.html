@@ -41,17 +41,10 @@
                                 <div class="fw-bold text-danger">
                                     ${{ n.total }}
                                 </div>
-                                <small class="text-muted">
-                                    Saldo: ${{ n.total - n.montoUsado }}
-                                </small>
                             </td>
 
                             <td>
-                                <span class="badge" [ngClass]="{
-                    'bg-success': n.estado === 'DISPONIBLE',
-                    'bg-warning text-dark': n.estado === 'PARCIAL',
-                    'bg-secondary': n.estado === 'USADA'
-                  }">
+                                <span class="badge bg-secondary">
                                     {{ n.estado }}
                                 </span>
                             </td>
